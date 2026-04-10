@@ -1,0 +1,21 @@
+# Frontend
+frontend/luxstore-nextjs/node_modules/
+frontend/luxstore-nextjs/.next/
+
+# Backend
+backend/luxstore-api/target/
+
+# Logs
+*.log
+
+# Env
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

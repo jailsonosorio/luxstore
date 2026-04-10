@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: luxstore-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/luxstore
+    username: postgres
+    password: j2k@1Love
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8080
