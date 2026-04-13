@@ -3,10 +3,8 @@
 import { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import Link from "next/link";
+import router from "next/router";
 
-/*function parsePrice(price: string) {
-    return Number(price.replaceAll(".", "").replace(" CVE", ""));
-}*/
 
 export default function CheckoutPage() {
     const { items, clearCart } = useCart();
@@ -21,6 +19,53 @@ export default function CheckoutPage() {
         (sum, item) => sum + Number(item.price) * item.quantity,
         0
     );
+
+    const whatsappLink = `https://wa.me/2389192012?text=${generateWhatsAppMessage()}`;
+
+    // 🔥 ENVIAR PEDIDO PARA BACKEND
+    async function handleSubmitOrder() {
+
+    if (!validateForm()) return;
+
+    setLoading(true);
+
+    try {
+        const orderData = {
+            customerName: name,
+            phone,
+            address,
+            total,
+            items: items.map((item) => ({
+                productId: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+            })),
+        };
+
+        const res = await fetch("http://localhost:8080/api/orders", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderData),
+        });
+
+        if (!res.ok) throw new Error("Erro ao criar pedido");
+
+        clearCart();
+        clearForm();
+        setSuccess(true);
+
+        alert("Pedido realizado com sucesso! 🎉");
+
+    } catch (error) {
+        console.error(error);
+        setError("Erro ao enviar pedido");
+    } finally {
+        setLoading(false);
+    }
+}
 
     function generateWhatsAppMessage() {
         const productsText = items
@@ -38,8 +83,7 @@ export default function CheckoutPage() {
         Total: ${total.toLocaleString("pt-PT")} CVE`;
     }
 
-    const whatsappLink = `https://wa.me/2389192012?text=${generateWhatsAppMessage()}`;
-
+    
     return (
         <main className="min-h-screen bg-neutral-950 text-white">
 
@@ -62,10 +106,10 @@ export default function CheckoutPage() {
                     {/* 🧾 FORMULÁRIO */}
                     <div className="space-y-6">
                         <div>
-                            <label className="text-sm text-white/60">Nome</label>
                             <input
                                 id="name"
                                 type="text"
+                                placeholder="Nome"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className={`mt-2 w-full rounded-xl px-4 py-3 bg-white/5 border ${error && !name ? "border-red-500" : "border-white/10"
@@ -74,10 +118,10 @@ export default function CheckoutPage() {
                         </div>
 
                         <div>
-                            <label className="text-sm text-white/60">Telefone</label>
                             <input
                                 id="phone"
                                 type="text"
+                                placeholder="Telefone"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 className={`mt-2 w-full rounded-xl px-4 py-3 bg-white/5 border ${error && !phone ? "border-red-500" : "border-white/10"
@@ -86,9 +130,9 @@ export default function CheckoutPage() {
                         </div>
 
                         <div>
-                            <label className="text-sm text-white/60">Morada</label>
                             <textarea
                                 id="address"
+                                placeholder="Morada"
                                 value={address}
                                 onChange={(e) => setAddress(e.target.value)}
                                 className={`mt-2 w-full rounded-xl px-4 py-3 bg-white/5 border ${error && !address ? "border-red-500" : "border-white/10"
@@ -124,6 +168,19 @@ export default function CheckoutPage() {
                                 {error}
                             </div>
                         )}
+                        <div className="mt-10 flex gap-4 flex-col sm:flex-row">
+                        {/* 🔥 NOVO BOTÃO BACKEND */}
+                       <button
+                            onClick={handleSubmitOrder}
+                            disabled={loading}
+                            className={`w-full rounded-full px-6 py-3 font-semibold transition ${
+                                loading
+                                    ? "bg-gray-400 text-black cursor-not-allowed"
+                                    : "bg-amber-400 text-black hover:scale-[1.02]"
+                            }`}
+                        >
+                            {loading ? "A processar..." : "Finalizar Pedido"}
+                        </button>
 
                         <button
                             onClick={() => {
@@ -135,21 +192,26 @@ export default function CheckoutPage() {
                                     window.open(whatsappLink, "_blank");
                                     setLoading(false);
                                     setSuccess(true);
+                                    clearForm();
                                 }, 800);
                             }}
                             disabled={loading}
-                            className={`mt-6 w-full rounded-full px-6 py-3 font-semibold transition ${loading
-                                ? "bg-gray-400 text-black cursor-not-allowed"
-                                : "bg-amber-400 text-black hover:scale-[1.02]"
-                                }`}
+                            className={`w-full rounded-full px-6 py-3 font-semibold transition ${
+                                loading
+                                    ? "bg-gray-400 text-black cursor-not-allowed"
+                                    : "bg-green-500 text-black hover:scale-[1.02]"
+                            }`}
                         >
                             {loading ? "A processar..." : "Finalizar via WhatsApp"}
                         </button>
+                        </div>
+                        
                         {success && (
                             <div className="mt-4 text-green-400 text-sm">
-                                Pedido pronto! Finalize no WhatsApp 👌
+                                Pedido pronto! 👌
                             </div>
                         )}
+                        
                     </div>
                 </div>
             </section>
@@ -189,5 +251,12 @@ export default function CheckoutPage() {
 
         setError("");
         return true;
+    }
+
+    function clearForm() {
+        setName("");
+        setPhone("");
+        setAddress("");
+        setError("");
     }
 }
