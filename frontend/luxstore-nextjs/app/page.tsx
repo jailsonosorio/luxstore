@@ -1,71 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const whatsappMessage = `Olá, tenho interesse em fazer compras na loja:`;
-  const categories = [
-    {
-      name: "Relógios",
-      desc: "Elegância e presença para todas as ocasiões.",
-      image:
-        "/images/products/relogios.avif",
-    },
-    {
-      name: "Cabelos Humanos",
-      desc: "Qualidade premium com acabamento natural.",
-      image:
-        "/images/products/cabelo_wig_luxure_volume.avif",
-    },
-    {
-      name: "Joias",
-      desc: "Peças que destacam beleza e sofisticação.",
-      image:
-        "/images/products/joia_conjunto_shine_luxury.avif",
-    },
-    {
-      name: "Roupas & Acessórios",
-      desc: "Estilo moderno para completar o teu visual.",
-      image:
-        "/images/products/roupas&acessorios.avif",
-    },
-  ];
+  const [categories, setCategories] = useState<any[]>([]);
+  const [bestSellers, setBestSellers] = useState<any[]>([]);
+  const [index, setIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const featuredProducts = [
-    {
-      name: "Relógio Executive Gold",
-      price: "32.500 CVE",
-      tag: "Mais vendido",
-      image:
-        "/images/products/relogio_silver_gold.avif",
-    },
-    {
-      name: "Lace Wig Premium",
-      price: "28.900 CVE",
-      tag: "Novo",
-      image:
-        "/images/products/conjunto_fashion_orange.avif",
-    },
-    {
-      name: "Conjunto Shine Luxury",
-      price: "18.750 CVE",
-      tag: "Oferta",
-      image:
-        "/images/products/joia_pulseira_luxe_gold.avif",
-    },
-    {
-      name: "Bolsa Urban Chic",
-      price: "12.600 CVE",
-      tag: "Popular",
-      image:
-        "/images/products/r&a_bolsa_urban_chi.avif",
-    },
-    {
-      name: "Sapatos Classic Men",
-      price: "12.600 CVE",
-      tag: "Popular",
-      image:
-        "/images/products/r&a_sapato_classic_men.avif",
-    },
-  ];
 
   const benefits = [
     "Entrega rápida e segura",
@@ -74,45 +18,32 @@ export default function Page() {
     "Compra simples e prática",
   ];
 
+  useEffect(() => {
+    fetch("http://localhost:8080/api/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8080/api/products/best-sellers")
+      .then(res => res.json())
+      .then(setBestSellers)
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (bestSellers.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % bestSellers.length);
+    }, 3000); // 3 segundos
+
+    return () => clearInterval(interval);
+  }, [bestSellers]);
+
   return (
     <main className="min-h-screen bg-neutral-950 text-white">
-      {/* <header className="sticky top-0 z-50 border-b border-white/10 bg-neutral-950/80 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div>
-            <p className="text-lg font-bold tracking-[0.25em] text-amber-400">
-              MORENO STORE
-            </p>
-            <p className="text-xs text-white/50">
-              Moda, brilho e elegância online
-            </p>
-          </div>
-
-          <nav className="hidden gap-6 text-sm text-white/75 md:flex">
-            <a href="#inicio" className="transition hover:text-white">
-              Início
-            </a>
-            <a href="#categorias" className="transition hover:text-white">
-              Categorias
-            </a>
-            <a href="#produtos" className="transition hover:text-white">
-              Produtos
-            </a>
-            <a href="#sobre" className="transition hover:text-white">
-              Sobre
-            </a>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <button className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-white/30 hover:text-white">
-              Entrar
-            </button>
-            <button className="rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:scale-[1.02]">
-              Comprar agora
-            </button>
-          </div>
-        </div>
-      </header>*/}
-
       <section
         id="inicio"
         className="relative overflow-hidden border-b border-white/10"
@@ -126,11 +57,11 @@ export default function Page() {
             </span>
 
             <h1 className="max-w-2xl text-4xl font-bold leading-tight md:text-6xl">
-              Venda os teus produtos com uma presença moderna e irresistível.
+              Compre os teus produtos com uma presença moderna e irresistível.
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-7 text-white/70 md:text-lg">
-              Uma homepage pensada para destacar relógios, cabelos humanos,
+              Uma area pensada para destacar relógios, cabelos humanos,
               joias, roupas e acessórios com confiança, elegância e foco em
               conversão.
             </p>
@@ -166,39 +97,46 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {featuredProducts.map((product, index) => (
-              <div
-                key={product.name}
-                className={`overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl shadow-black/30 ${index === 0 ? "sm:col-span-2" : ""
-                  }`}
-              >
-                <div className="relative h-64 w-full overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition duration-500 hover:scale-105"
-                  />
-                  <span className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white">
-                    {product.tag}
-                  </span>
-                </div>
+          <div className="grid gap-4">
+  {bestSellers.length > 0 && (
+    <div
+      key={bestSellers[currentIndex].id}
+      className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl shadow-black/30 sm:col-span-2 transition-all duration-700"
+    >
+      <div className="relative h-[370px] w-full overflow-hidden">
+        <img
+          src={bestSellers[currentIndex].image}
+          alt={bestSellers[currentIndex].name}
+          className="h-full w-full object-cover transition duration-700 hover:scale-105"
+        />
 
-                <div className="space-y-2 p-5">
-                  <h3 className="text-lg font-semibold">{product.name}</h3>
-                  <p className="text-sm text-white/60">Destaque da semana</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-bold text-amber-300">
-                      {product.price}
-                    </span>
-                    <button className="rounded-full border border-white/15 px-4 py-2 text-sm transition hover:border-white/30">
-                      Ver mais
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <span className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs font-medium text-white">
+          Mais vendido
+        </span>
+      </div>
+
+      <div className="space-y-2 p-5">
+        <h3 className="text-lg font-semibold">
+          {bestSellers[currentIndex].name}
+        </h3>
+
+        <p className="text-sm text-white/60">
+          {bestSellers[currentIndex].description || "Destaque da semana"}
+        </p>
+
+        <div className="flex items-center justify-between">
+          <span className="text-base font-bold text-amber-300">
+            {Number(bestSellers[currentIndex].price).toLocaleString("pt-PT")} CVE
+          </span>
+
+          <button className="rounded-full border border-white/15 px-4 py-2 text-sm transition hover:border-white/30">
+            Ver mais
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
         </div>
       </section>
 
@@ -278,7 +216,7 @@ export default function Page() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            {featuredProducts.map((product) => (
+            {bestSellers.map((product) => (
               <div
                 key={product.name}
                 className="overflow-hidden rounded-[2rem] border border-white/10 bg-neutral-900"

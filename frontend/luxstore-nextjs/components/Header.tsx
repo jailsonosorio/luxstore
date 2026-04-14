@@ -2,10 +2,16 @@
 
 import Link from "next/link";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
     const { cartCount } = useCart();
+    const { isLoggedIn, isAdmin, logout } = useAuth();
 
+function handleLogout() {
+    logout();
+    window.location.href = "/";
+}
     return (
         <header className="sticky top-0 z-50 border-b border-white/10 bg-neutral-950">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -42,12 +48,38 @@ export default function Header() {
                     >
                         Carrinho ({cartCount})
                     </Link>
+                    {!isLoggedIn && (
+                     <>
                     <button className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-white/30 hover:text-white">
-                        Entrar
+                        Minha Area
                     </button>
                     <button className="rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:scale-[1.02]">
-                        Comprar agora
+                        <Link
+                        href="/admin/login"
+                        className="text-sm text-white/70 hover:text-amber-300"
+                        >
+                        Admin
+                        </Link>
                     </button>
+                    </>
+                    )}
+                    {isLoggedIn && isAdmin && (
+                    <>
+                        <Link 
+                            href="/admin/orders"
+                            className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 hover:text-white"
+                        >
+                            Painel
+                        </Link>
+
+                        <button 
+                            onClick={handleLogout}
+                            className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:scale-[1.02]"
+                        >
+                            Logout
+                        </button>
+                    </>
+                    )}
                 </div>
             </div>
         </header>

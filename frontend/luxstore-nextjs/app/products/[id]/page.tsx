@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCart } from "../../../context/CartContext";
+import { formatCategory } from "../../../utils/format";
 
 export default function ProductDetailsPage() {
     const params = useParams();
@@ -72,12 +73,12 @@ export default function ProductDetailsPage() {
                     <div className="flex flex-col justify-center">
                         <div className="mb-4 flex flex-wrap items-center gap-3">
                             <span className="rounded-full bg-amber-400/10 px-4 py-1 text-sm text-amber-300">
-                                {product.category}
+                                {formatCategory(product.category)}
                             </span>
 
                             {product.badge && (
                                 <span className="rounded-full border border-white/10 px-4 py-1 text-sm text-white/70">
-                                    {product.badge}
+                                    {formatCategory(product.badge)}
                                 </span>
                             )}
                         </div>

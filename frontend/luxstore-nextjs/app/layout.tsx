@@ -1,6 +1,7 @@
 import "./globals.css";
 import Header from "../components/Header";
 import { CartProvider } from "../context/CartContext";
+import { AuthProvider } from "../context/AuthContext";
 
 export const metadata = {
   title: "MorenoStore",
@@ -15,7 +16,13 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body>
-        <CartProvider><Header />{children}</CartProvider>
+        {/*<CartProvider><Header />{children}</CartProvider>*/}
+        <AuthProvider>
+          <CartProvider>
+            <Header />
+            {children}
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

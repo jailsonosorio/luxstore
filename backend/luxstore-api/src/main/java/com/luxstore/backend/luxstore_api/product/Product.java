@@ -29,6 +29,8 @@ public class Product {
 
     private boolean active = true;
 
+    private Boolean isBestSeller;
+
     // getters e setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -63,7 +65,15 @@ public class Product {
     public boolean isActive() {
         return active;
     }
+    // ACTIVE
     public void setActive(boolean active) {
         this.active = active;
+    }
+    // BESTSELLER
+    public Boolean getIsBestSeller() {
+        return isBestSeller;
+    }
+    public void setIsBestSeller(Boolean isBestSeller) {
+        this.isBestSeller = isBestSeller;
     }
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { formatCategory } from "../../utils/format";
 
 export default function ProductsPage() {
     const searchParams = useSearchParams();
@@ -93,7 +94,7 @@ export default function ProductsPage() {
 
                 <div className="mt-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
 
-                    {/* 🔥 FILTROS */}
+                    {/* FILTROS */}
                     <div className="flex flex-col gap-4">
 
                         {/* Categorias */}
@@ -136,7 +137,7 @@ export default function ProductsPage() {
 
                     </div>
 
-                    {/* 🔍 PESQUISA */}
+                    {/* PESQUISA */}
                     <div className="relative w-full lg:w-[395px]">
                         <input
                             type="text"
@@ -188,7 +189,7 @@ export default function ProductsPage() {
                                         </h3>
 
                                         <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-white/60">
-                                            {product.category}
+                                            {formatCategory(product.category)}
                                         </span>
                                     </div>
 
@@ -213,11 +214,4 @@ export default function ProductsPage() {
             </section>
         </main>
     );
-
-    function formatCategory(value: string) {
-        return value
-            .replace("_", " ")
-            .toLowerCase()
-            .replace(/\b\w/g, (l) => l.toUpperCase());
-    }
 }

@@ -11,5 +11,10 @@ spring:
       ddl-auto: update
     show-sql: true
 
+app:
+  jwt:
+    secret: "luxstore-super-secret-key-change-this-to-a-long-random-key-123456789"
+    expiration-ms: 86400000
+
 server:
   port: 8080

@@ -24,6 +24,9 @@ public class Order {
     @JoinColumn(name = "order_id")
     private List<OrderItem> items;
 
+    @Column(nullable = false)
+    private String status = "PENDENTE";
+
     public Long getId() {
         return id;
     }
@@ -78,6 +81,14 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+  "compilerOptions": {    
     "lib": [
       "dom",
       "dom.iterable",
@@ -16,6 +16,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },"ignoreDeprecations": "6.0",
     "plugins": [
       {
         "name": "next"
@@ -26,7 +30,8 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "global.d.ts"
   ],
   "exclude": [
     "node_modules"
