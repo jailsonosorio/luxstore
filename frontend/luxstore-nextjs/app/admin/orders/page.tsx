@@ -102,16 +102,16 @@ export default function AdminOrdersPage() {
     function getAvailableActions(status: string) {
         switch (status) {
             case "PENDENTE":
-            return ["CONFIRMADO", "CANCELADO"];
+                return ["CONFIRMADO", "CANCELADO"];
 
             case "CONFIRMADO":
-            return ["ENTREGUE", "CANCELADO"];
+                return ["ENTREGUE", "CANCELADO"];
 
             case "ENTREGUE":
-            return ["FECHADO"];
+                return ["FECHADO"];
 
             default:
-            return [];
+                return [];
         }
     }
 
@@ -119,6 +119,14 @@ export default function AdminOrdersPage() {
         statusFilter === "TODOS"
             ? orders
             : orders.filter((order) => order.status === statusFilter);
+    
+    // ESTATÍSTICAS SIMPLES
+    const totalOrders = filteredOrders .length;
+    const pendingOrders = filteredOrders .filter(o => o.status === "PENDENTE").length;
+    const confirmedOrders = filteredOrders .filter(o => o.status === "CONFIRMADO").length;
+    const deliveredOrders = filteredOrders .filter(o => o.status === "ENTREGUE").length;
+    const closedOrders = filteredOrders .filter(o => o.status === "FECHADO").length;
+    const totalRevenue = filteredOrders .reduce((sum, o) => sum + (o.total || 0), 0);
 
     return (
         <main className="min-h-screen bg-neutral-950 text-white px-6 py-12">
@@ -138,6 +146,41 @@ export default function AdminOrdersPage() {
                             {status}
                         </button>
                     ))}
+                </div>
+                <div className="grid gap-4 md:grid-cols-6 mt-6 mb-6">
+
+                    <div className="rounded-2xl bg-white/5 p-4 border border-white/10 ">
+                        <p className="text-sm text-white/60">Total Pedidos</p>
+                        <h3 className="text-2xl font-bold">{totalOrders}</h3>
+                    </div>
+
+                    <div className="rounded-2xl bg-yellow-500/10 p-4 border border-yellow-500/20">
+                        <p className="text-sm text-yellow-300">Pendentes</p>
+                        <h3 className="text-2xl font-bold">{pendingOrders}</h3>
+                    </div>
+
+                    <div className="rounded-2xl bg-blue-500/10 p-4 border border-blue-500/20">
+                        <p className="text-sm text-blue-300">Confirmados</p>
+                        <h3 className="text-2xl font-bold">{confirmedOrders}</h3>
+                    </div>
+
+                    <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
+                        <p className="text-sm text-green-300">Entregues</p>
+                        <h3 className="text-2xl font-bold">{deliveredOrders}</h3>
+                    </div>
+
+                    <div className="rounded-2xl bg-gray-500/10 p-4 border border-gray-500/20">
+                        <p className="text-sm text-gray-300">Fechados</p>
+                        <h3 className="text-2xl font-bold">{closedOrders}</h3>
+                    </div>
+
+                    <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
+                        <p className="text-sm text-green-300">Faturação</p>
+                        <h3 className="text-2xl font-bold">
+                            {totalRevenue.toLocaleString("pt-PT")} CVE
+                        </h3>
+                    </div>
+
                 </div>
 
                 {loading ? (
@@ -193,24 +236,23 @@ export default function AdminOrdersPage() {
                                     </div>
 
                                     <div className="mt-4 flex gap-2 flex-wrap">
-  {getAvailableActions(order.status).map((action) => (
-    <button
-      key={action}
-      onClick={() => updateStatus(order.id, action)}
-      className={`text-xs px-2 py-1 rounded ${
-        action === "CONFIRMADO"
-          ? "bg-blue-500"
-          : action === "ENTREGUE"
-          ? "bg-green-500"
-          : action === "CANCELADO"
-          ? "bg-red-500"
-          : "bg-gray-500"
-      }`}
-    >
-      {action}
-    </button>
-  ))}
-</div>
+                                        {getAvailableActions(order.status).map((action) => (
+                                            <button
+                                                key={action}
+                                                onClick={() => updateStatus(order.id, action)}
+                                                className={`text-xs px-2 py-1 rounded ${action === "CONFIRMADO"
+                                                        ? "bg-blue-500"
+                                                        : action === "ENTREGUE"
+                                                            ? "bg-green-500"
+                                                            : action === "CANCELADO"
+                                                                ? "bg-red-500"
+                                                                : "bg-gray-500"
+                                                    }`}
+                                            >
+                                                {action}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         ))}

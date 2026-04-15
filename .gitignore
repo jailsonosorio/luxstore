@@ -21,5 +21,13 @@ Thumbs.db
 .idea/
 documentacao/Lux Store System Specification.docx
 documentacao/lux_store_system_specification.md
-products
-category
+documentacao/LuxStore_Roadmap.docx
+documentacao/lux_store_system_specification (2).md
+documentacao/Lux Store System Specification (2).docx
+documentacao/.readme.txt
+.gitignore
+documentacao/api-docs.yaml
+frontend/luxstore-nextjs/public/images/category/roupas&acessorios.avif
+frontend/luxstore-nextjs/public/images/category/joia_conjunto_shine_luxury.avif
+frontend/luxstore-nextjs/public/images/category/cabelo_wig_luxure_volume.avif
+frontend/luxstore-nextjs/public/images/category/relogios.avif

@@ -2,6 +2,10 @@ package com.luxstore.backend.luxstore_api.auth;
 
 import com.luxstore.backend.luxstore_api.user.User;
 import com.luxstore.backend.luxstore_api.user.UserRepository;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name = "Autenticação", description = "Login e autenticação administrativa")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -26,6 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Autenticar administrador e gerar token JWT")
     public AuthResponse login(@RequestBody AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

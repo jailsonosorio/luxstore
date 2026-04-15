@@ -20,9 +20,9 @@ export default function CheckoutPage() {
         0
     );
 
-    const whatsappLink = `https://wa.me/2389192012?text=${generateWhatsAppMessage()}`;
+    const whatsappLink = `https://wa.me/2389200910?text=${generateWhatsAppMessage()}`;
 
-    // 🔥 ENVIAR PEDIDO PARA BACKEND
+    // ENVIAR PEDIDO PARA BACKEND
     async function handleSubmitOrder() {
 
     if (!validateForm()) return;

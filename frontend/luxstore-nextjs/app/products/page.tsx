@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { formatCategory } from "../../utils/format";
+import { normalizeText } from "@/utils/search";
 
 export default function ProductsPage() {
     const searchParams = useSearchParams();
@@ -11,12 +12,13 @@ export default function ProductsPage() {
 
     const selectedCategory = searchParams.get("category");
     const selectedBadge = searchParams.get("badge");
-
-    const [search, setSearch] = useState("");
+    const initialSearch = searchParams.get("search") || "";
+    const [search, setSearch] = useState(initialSearch);
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // 🔥 FETCH API
+
+    // FETCH API
     useEffect(() => {
         fetch("http://localhost:8080/api/products")
             .then((res) => res.json())
@@ -30,17 +32,17 @@ export default function ProductsPage() {
             });
     }, []);
 
-    // 🔹 categorias únicas
+    // categorias únicas
     const categories = Array.from(
         new Set(products.map((p) => formatCategory(p.category)))
     );
 
-    // 🔹 badges únicos
+    // badges únicos
     const badges = Array.from(
         new Set(products.map((p) => formatCategory(p.badge)).filter(Boolean))
     );
 
-    // 🔹 atualizar filtros na URL
+    // atualizar filtros na URL
     function updateFilter(type: "category" | "badge", value: string) {
         const params = new URLSearchParams(searchParams.toString());
 
@@ -53,7 +55,7 @@ export default function ProductsPage() {
         router.push(`/products?${params.toString()}`);
     }
 
-    // 🔥 FILTRO + PESQUISA
+    // FILTRO + PESQUISA
     const filteredProducts = products.filter((product) => {
         const matchCategory = selectedCategory
             ? formatCategory(product.category) === selectedCategory
@@ -63,9 +65,21 @@ export default function ProductsPage() {
             ? formatCategory(product.badge) === selectedBadge
             : true;
 
-        const matchSearch =
-            product.name.toLowerCase().includes(search.toLowerCase()) ||
-            product.description.toLowerCase().includes(search.toLowerCase());
+        // NORMALIZAÇÃO
+        const normalizedSearch = normalizeText(search);
+
+        const name = normalizeText(product.name);
+        const description = normalizeText(product.description || "");
+        const category = normalizeText(product.category || "");
+        const badge = normalizeText(product.badge || "");
+
+
+        // BUSCA INTELIGENTE (por palavras)
+        const words = normalizedSearch.split(" ").filter(Boolean);
+
+        const matchSearch = words.every((word) =>
+            name.includes(word) || description.includes(word) || category.includes(word) || badge.includes(word)
+        );
 
         return matchCategory && matchBadge && matchSearch;
     });
@@ -134,23 +148,25 @@ export default function ProductsPage() {
                                 ))}
                             </div>
                         </div>
-
                     </div>
 
                     {/* PESQUISA */}
-                    <div className="relative w-full lg:w-[395px]">
+                    <div className="relative w-full lg:w-[400px] shadow-lg shadow-black/20">
                         <input
                             type="text"
                             placeholder="Procurar produtos..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full rounded-full border border-white/10 bg-white/5 px-10 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:border-amber-400/40"
+                            className="w-full rounded-full border border-white/10 bg-white/10 backdrop-blur-md px-10 py-3 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-400/40 focus:bg-white/15 transition"
                         />
-                        <span className="absolute left-3 top-2.5 text-white/40">🔍</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 ">
+                            🔍
+                        </span>
+
                     </div>
                 </div>
 
-                {/* 🔥 RESULTADOS */}
+                {/* RESULTADOS */}
                 <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
                     {loading ? (
@@ -177,7 +193,7 @@ export default function ProductsPage() {
 
                                     {product.badge && (
                                         <span className="absolute left-4 top-4 rounded-full bg-black/60 px-3 py-1 text-xs text-white">
-                                            {product.badge}
+                                            {formatCategory(product.badge)}
                                         </span>
                                     )}
                                 </div>

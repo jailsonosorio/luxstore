@@ -5,3 +5,4 @@ export function formatCategory(value: string) {
             .toLowerCase()
             .replace(/\b\w/g, (l) => l.toUpperCase());
     }
+

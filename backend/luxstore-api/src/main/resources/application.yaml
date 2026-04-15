@@ -1,6 +1,7 @@
 spring:
   application:
     name: luxstore-api
+
   datasource:
     url: jdbc:postgresql://localhost:5432/luxstore
     username: postgres
@@ -15,6 +16,14 @@ app:
   jwt:
     secret: "luxstore-super-secret-key-change-this-to-a-long-random-key-123456789"
     expiration-ms: 86400000
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  api-docs:
+    path: /v3/api-docs
 
 server:
   port: 8080

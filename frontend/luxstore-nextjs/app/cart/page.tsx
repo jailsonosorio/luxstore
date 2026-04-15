@@ -145,7 +145,7 @@ export default function CartPage() {
 
                             <div className="mt-8 flex flex-col gap-3">
                                 <a
-                                    href={`https://wa.me/2389192012?text=${whatsappText}`}
+                                    href={`https://wa.me/2389200910?text=${whatsappText}`}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="rounded-full bg-amber-400 px-5 py-3 text-center font-semibold text-neutral-950"

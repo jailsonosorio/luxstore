@@ -17,7 +17,7 @@ function handleLogout() {
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                 <div>
                     <Link href="/" className="text-lg font-bold tracking-[0.25em] text-amber-400">
-                        MorenoStore
+                        Moreno Store
                     </Link>
                     <p className="text-xs text-white/50">
                         Moda, brilho e elegância online
@@ -25,8 +25,8 @@ function handleLogout() {
                 </div>
 
 
-                <nav className="hidden gap-6 text-sm text-white/75 md:flex">
-                    <Link href="/" className="transition hover:text-white">
+                <nav className="hidden gap-6 text-sm text-white/75 md:flex ">
+                    <Link href="/" className="transition hover:text-white ">
                         Início
                     </Link>
                     <a href="#categorias" className="transition hover:text-white">

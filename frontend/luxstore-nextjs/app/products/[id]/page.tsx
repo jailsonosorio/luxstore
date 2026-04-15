@@ -9,13 +9,11 @@ import { formatCategory } from "../../../utils/format";
 export default function ProductDetailsPage() {
     const params = useParams();
     const { addToCart } = useCart();
-
     const [product, setProduct] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-
     const productId = Number(params.id);
 
-    // 🔥 FETCH PRODUCT BY ID
+    // FETCH PRODUCT BY ID
     useEffect(() => {
         if (!productId) return;
 
@@ -104,7 +102,7 @@ export default function ProductDetailsPage() {
                             </button>
 
                             <a
-                                href={`https://wa.me/2389192012?text=${encodeURIComponent(
+                                href={`https://wa.me/2389200910?text=${encodeURIComponent(
                                     whatsappMessage
                                 )}`}
                                 target="_blank"
