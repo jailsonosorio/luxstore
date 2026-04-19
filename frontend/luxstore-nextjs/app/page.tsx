@@ -1,6 +1,5 @@
 "use client";
 
-import Products from "@/components/Products";
 import { formatCategory } from "@/utils/format";
 import { useRouter } from "next/navigation";
 import Link from "next/link";

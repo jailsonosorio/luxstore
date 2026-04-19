@@ -16,7 +16,6 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body>
-        {/*<CartProvider><Header />{children}</CartProvider>*/}
         <AuthProvider>
           <CartProvider>
             <Header />

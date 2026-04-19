@@ -1,19 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../../../context/AuthContext";
+import { Package, ShoppingCart, MailCheck, LayoutGrid } from "lucide-react";
 
 export default function AdminOrdersPage() {
-    const { token, isLoggedIn, isAdmin } = useAuth();
+    const { token, isLoggedIn, isAdmin, loading } = useAuth();
     const router = useRouter();
     const [orders, setOrders] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loadingOrders, setLoadingOrders] = useState(true);
     const [statusFilter, setStatusFilter] = useState("TODOS");
+    const pathname = usePathname();
 
     async function fetchOrders() {
 
-        setLoading(true);
+        setLoadingOrders(true);
 
         try {
             const res = await fetch("http://localhost:8080/api/admin/orders", {
@@ -33,12 +35,13 @@ export default function AdminOrdersPage() {
         } catch (err) {
             console.error(err);
         } finally {
-            setLoading(false);
+            setLoadingOrders(false);
         }
     }
 
     useEffect(() => {
-        // Proteção da rota
+        if (loading) return;
+
         if (!isLoggedIn || !isAdmin) {
             router.push("/admin/login");
             return;
@@ -47,11 +50,13 @@ export default function AdminOrdersPage() {
         // Fetch só se estiver autorizado
         fetchOrders();
 
-    }, [isLoggedIn, isAdmin, token, router]);
+    }, [loading, isLoggedIn, isAdmin, token, router]);
 
     if (!isLoggedIn || !isAdmin) {
         return null;
     }
+
+    if (loading) return null;
 
     function getStatusColor(status: string) {
         switch (status) {
@@ -119,21 +124,23 @@ export default function AdminOrdersPage() {
         statusFilter === "TODOS"
             ? orders
             : orders.filter((order) => order.status === statusFilter);
-    
+
     // ESTATÍSTICAS SIMPLES
-    const totalOrders = filteredOrders .length;
-    const pendingOrders = filteredOrders .filter(o => o.status === "PENDENTE").length;
-    const confirmedOrders = filteredOrders .filter(o => o.status === "CONFIRMADO").length;
-    const deliveredOrders = filteredOrders .filter(o => o.status === "ENTREGUE").length;
-    const closedOrders = filteredOrders .filter(o => o.status === "FECHADO").length;
-    const totalRevenue = filteredOrders .reduce((sum, o) => sum + (o.total || 0), 0);
+    const totalOrders = filteredOrders.length;
+    const pendingOrders = filteredOrders.filter(o => o.status === "PENDENTE").length;
+    const confirmedOrders = filteredOrders.filter(o => o.status === "CONFIRMADO").length;
+    const deliveredOrders = filteredOrders.filter(o => o.status === "ENTREGUE").length;
+    const closedOrders = filteredOrders.filter(o => o.status === "FECHADO").length;
+    const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
     return (
-        <main className="min-h-screen bg-neutral-950 text-white px-6 py-12">
-            <div className="mx-auto max-w-6xl">
-                <h1 className="text-4xl font-bold">Pedidos</h1>
+        <div className="flex min-h-screen bg-neutral-950 text-white">
+            {/* CONTEÚDO */}
+            <main className="flex-1 px-5 py-6">
+                <div className="mx-auto max-w-6xl">
+                    <h1 className="text-4xl font-bold">Pedidos</h1>
 
-                <div className="mt-6 flex flex-wrap gap-3">
+                    {/* <div className="mt-6 flex flex-wrap gap-3">
                     {["TODOS", "PENDENTE", "CONFIRMADO", "ENTREGUE", "FECHADO", "CANCELADO"].map((status) => (
                         <button
                             key={status}
@@ -146,119 +153,120 @@ export default function AdminOrdersPage() {
                             {status}
                         </button>
                     ))}
-                </div>
-                <div className="grid gap-4 md:grid-cols-6 mt-6 mb-6">
+                </div>*/}
+                    <div className="grid gap-4 md:grid-cols-6 mt-6 mb-6">
 
-                    <div className="rounded-2xl bg-white/5 p-4 border border-white/10 ">
-                        <p className="text-sm text-white/60">Total Pedidos</p>
-                        <h3 className="text-2xl font-bold">{totalOrders}</h3>
+                        <div className="rounded-2xl bg-white/5 p-4 border border-white/10 ">
+                            <p className="text-sm text-white/60">Total Pedidos</p>
+                            <h3 className="text-2xl font-bold">{totalOrders}</h3>
+                        </div>
+
+                        <div className="rounded-2xl bg-yellow-500/10 p-4 border border-yellow-500/20">
+                            <p className="text-sm text-yellow-300">Pendentes</p>
+                            <h3 className="text-2xl font-bold">{pendingOrders}</h3>
+                        </div>
+
+                        <div className="rounded-2xl bg-blue-500/10 p-4 border border-blue-500/20">
+                            <p className="text-sm text-blue-300">Confirmados</p>
+                            <h3 className="text-2xl font-bold">{confirmedOrders}</h3>
+                        </div>
+
+                        <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
+                            <p className="text-sm text-green-300">Entregues</p>
+                            <h3 className="text-2xl font-bold">{deliveredOrders}</h3>
+                        </div>
+
+                        <div className="rounded-2xl bg-gray-500/10 p-4 border border-gray-500/20">
+                            <p className="text-sm text-gray-300">Fechados</p>
+                            <h3 className="text-2xl font-bold">{closedOrders}</h3>
+                        </div>
+
+                        <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
+                            <p className="text-sm text-green-300">Faturação</p>
+                            <h3 className="text-2xl font-bold">
+                                {totalRevenue.toLocaleString("pt-PT")} CVE
+                            </h3>
+                        </div>
+
                     </div>
 
-                    <div className="rounded-2xl bg-yellow-500/10 p-4 border border-yellow-500/20">
-                        <p className="text-sm text-yellow-300">Pendentes</p>
-                        <h3 className="text-2xl font-bold">{pendingOrders}</h3>
-                    </div>
-
-                    <div className="rounded-2xl bg-blue-500/10 p-4 border border-blue-500/20">
-                        <p className="text-sm text-blue-300">Confirmados</p>
-                        <h3 className="text-2xl font-bold">{confirmedOrders}</h3>
-                    </div>
-
-                    <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
-                        <p className="text-sm text-green-300">Entregues</p>
-                        <h3 className="text-2xl font-bold">{deliveredOrders}</h3>
-                    </div>
-
-                    <div className="rounded-2xl bg-gray-500/10 p-4 border border-gray-500/20">
-                        <p className="text-sm text-gray-300">Fechados</p>
-                        <h3 className="text-2xl font-bold">{closedOrders}</h3>
-                    </div>
-
-                    <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
-                        <p className="text-sm text-green-300">Faturação</p>
-                        <h3 className="text-2xl font-bold">
-                            {totalRevenue.toLocaleString("pt-PT")} CVE
-                        </h3>
-                    </div>
-
-                </div>
-
-                {loading ? (
-                    <p className="mt-6 text-white/60">A carregar pedidos...</p>
-                ) : (
-                    <div className="mt-8 grid gap-6 md:grid-cols-2">
-                        {filteredOrders.map((order) => (
-                            <div
-                                key={order.id}
-                                className="rounded-2xl border border-white/10 bg-white/5 p-6 h-[370px] flex flex-col"
-                            >
-                                {/* HEADER */}
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <p className="font-semibold">Pedido #{order.id}</p>
-                                        <p className="text-sm text-white/60">{order.customerName}</p>
-                                    </div>
-
-                                    <span
-                                        className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                                            order.status
-                                        )}`}
-                                    >
-                                        {order.status}
-                                    </span>
-                                </div>
-
-                                {/* INFO */}
-                                <div className="mt-4 text-sm text-white/70">
-                                    <p>{order.phone}</p>
-                                    <p>{order.address}</p>
-                                </div>
-
-                                {/* ITENS */}
-                                <div className="mt-4 flex-1 overflow-y-auto pr-2 space-y-2">
-                                    {order.items.map((item: any) => (
-                                        <div key={item.id} className="flex justify-between text-sm">
-                                            <span>
-                                                {item.name} x{item.quantity}
-                                            </span>
-                                            <span>{Number(item.price).toLocaleString("pt-PT")} CVE</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* RODAPÉ FIXO */}
-                                <div className="mt-4 border-t border-white/10 pt-4">
+                    {loadingOrders ? (
+                        <p className="mt-6 text-white/60">A carregar pedidos...</p>
+                    ) : (
+                        <div className="mt-8 grid gap-6 md:grid-cols-2">
+                            {filteredOrders.map((order) => (
+                                <div
+                                    key={order.id}
+                                    className="rounded-2xl border border-white/10 bg-white/5 p-6 h-[370px] flex flex-col"
+                                >
+                                    {/* HEADER */}
                                     <div className="flex justify-between items-center">
-                                        <span className="text-sm text-white/60">Total</span>
-                                        <span className="font-bold text-amber-300">
-                                            {Number(order.total).toLocaleString("pt-PT")} CVE
+                                        <div>
+                                            <p className="font-semibold">Pedido #{order.id}</p>
+                                            <p className="text-sm text-white/60">{order.customerName}</p>
+                                        </div>
+
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                                                order.status
+                                            )}`}
+                                        >
+                                            {order.status}
                                         </span>
                                     </div>
 
-                                    <div className="mt-4 flex gap-2 flex-wrap">
-                                        {getAvailableActions(order.status).map((action) => (
-                                            <button
-                                                key={action}
-                                                onClick={() => updateStatus(order.id, action)}
-                                                className={`text-xs px-2 py-1 rounded ${action === "CONFIRMADO"
+                                    {/* INFO */}
+                                    <div className="mt-4 text-sm text-white/70">
+                                        <p>{order.phone}</p>
+                                        <p>{order.address}</p>
+                                    </div>
+
+                                    {/* ITENS */}
+                                    <div className="mt-4 flex-1 overflow-y-auto pr-2 space-y-2">
+                                        {order.items.map((item: any) => (
+                                            <div key={item.id} className="flex justify-between text-sm">
+                                                <span>
+                                                    {item.name} x{item.quantity}
+                                                </span>
+                                                <span>{Number(item.price).toLocaleString("pt-PT")} CVE</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* RODAPÉ FIXO */}
+                                    <div className="mt-4 border-t border-white/10 pt-4">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm text-white/60">Total</span>
+                                            <span className="font-bold text-amber-300">
+                                                {Number(order.total).toLocaleString("pt-PT")} CVE
+                                            </span>
+                                        </div>
+
+                                        <div className="mt-4 flex gap-2 flex-wrap">
+                                            {getAvailableActions(order.status).map((action) => (
+                                                <button
+                                                    key={action}
+                                                    onClick={() => updateStatus(order.id, action)}
+                                                    className={`text-xs px-2 py-1 rounded ${action === "CONFIRMADO"
                                                         ? "bg-blue-500"
                                                         : action === "ENTREGUE"
                                                             ? "bg-green-500"
                                                             : action === "CANCELADO"
                                                                 ? "bg-red-500"
                                                                 : "bg-gray-500"
-                                                    }`}
-                                            >
-                                                {action}
-                                            </button>
-                                        ))}
+                                                        }`}
+                                                >
+                                                    {action}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </main>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </main>
+        </div>
     );
 }
