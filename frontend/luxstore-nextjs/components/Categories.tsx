@@ -1,4 +1,8 @@
-const categories = ["Relógios", "Cabelos", "Joias", "Roupas & Acessórios"];
+import { useState } from "react";
+
+//const categories = ["Relógios", "Cabelos", "Joias", "Roupas & Acessórios"];
+
+const [categories, setCategories] = useState([]);
 
 export default function Categories() {
     return (

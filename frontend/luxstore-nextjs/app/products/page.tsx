@@ -11,11 +11,13 @@ export default function ProductsPage() {
     const router = useRouter();
 
     const selectedCategory = searchParams.get("category");
+    const categoryId = searchParams.get("categoryId");
     const selectedBadge = searchParams.get("badge");
     const initialSearch = searchParams.get("search") || "";
     const [search, setSearch] = useState(initialSearch);
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const selectedCategoryId = categoryId ? Number(categoryId) : null;
 
 
     // FETCH API
@@ -34,8 +36,8 @@ export default function ProductsPage() {
 
     // categorias únicas
     const categories = Array.from(
-        new Set(products.map((p) => formatCategory(p.category)))
-    );
+        new Map(products.map(p => [p.category?.id, p.category])).values()
+    ).filter(Boolean);
 
     // badges únicos
     const badges = Array.from(
@@ -43,22 +45,22 @@ export default function ProductsPage() {
     );
 
     // atualizar filtros na URL
-    function updateFilter(type: "category" | "badge", value: string) {
-        const params = new URLSearchParams(searchParams.toString());
+    function updateFilter(type: "categoryId" | "badge", value: string) {
+    const params = new URLSearchParams(searchParams.toString());
 
-        if (params.get(type) === value) {
-            params.delete(type);
-        } else {
-            params.set(type, value);
-        }
+    if (params.get(type) === value) {
+        params.delete(type);
+    } else {
+        params.set(type, value);
+    }
 
-        router.push(`/products?${params.toString()}`);
+    router.push(`/products?${params.toString()}`);
     }
 
     // FILTRO + PESQUISA
     const filteredProducts = products.filter((product) => {
-        const matchCategory = selectedCategory
-            ? formatCategory(product.category) === selectedCategory
+        const matchCategory = selectedCategoryId
+            ? product.category?.id === selectedCategoryId
             : true;
 
         const matchBadge = selectedBadge
@@ -70,20 +72,21 @@ export default function ProductsPage() {
 
         const name = normalizeText(product.name);
         const description = normalizeText(product.description || "");
-        const category = normalizeText(product.category || "");
+        const category = normalizeText(product.category?.name)
         const badge = normalizeText(product.badge || "");
 
 
         // BUSCA INTELIGENTE (por palavras)
         const words = normalizedSearch.split(" ").filter(Boolean);
 
-        const matchSearch = words.every((word) =>
-            name.includes(word) || description.includes(word) || category.includes(word) || badge.includes(word)
-        );
+        const matchSearch =
+            normalizeText(product.name).includes(normalizeText(search)) ||
+            normalizeText(product.description).includes(normalizeText(search)) ||
+            normalizeText(product.category?.name).includes(normalizeText  (search));
 
         return matchCategory && matchBadge && matchSearch;
     });
-
+    console.log("Produtos filtrados:", filteredProducts);
     return (
         <main className="min-h-screen bg-neutral-950 text-white">
             <section className="mx-auto max-w-7xl px-6 py-12">
@@ -118,13 +121,13 @@ export default function ProductsPage() {
                                 {categories.map((cat) => (
                                     <button
                                         key={cat}
-                                        onClick={() => updateFilter("category", cat)}
-                                        className={`rounded-full px-4 py-2 text-sm transition ${selectedCategory === cat
+                                        onClick={() => updateFilter("categoryId", String(cat.id))}
+                                        className={`rounded-full px-4 py-2 text-sm transition ${selectedCategoryId === cat.id
                                             ? "bg-amber-400 text-black"
                                             : "border border-white/10 text-white/70 hover:border-white/30"
                                             }`}
                                     >
-                                        {cat}
+                                        {cat.name}
                                     </button>
                                 ))}
                             </div>
@@ -205,7 +208,7 @@ export default function ProductsPage() {
                                         </h3>
 
                                         <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-white/60">
-                                            {formatCategory(product.category)}
+                                            {product.category?.name}
                                         </span>
                                     </div>
 

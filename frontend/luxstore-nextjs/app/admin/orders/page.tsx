@@ -14,9 +14,7 @@ export default function AdminOrdersPage() {
     const pathname = usePathname();
 
     async function fetchOrders() {
-
         setLoadingOrders(true);
-
         try {
             const res = await fetch("http://localhost:8080/api/admin/orders", {
                 headers: {
@@ -58,6 +56,7 @@ export default function AdminOrdersPage() {
 
     if (loading) return null;
 
+    // Função para mapear status para cores
     function getStatusColor(status: string) {
         switch (status) {
             case "PENDENTE":
@@ -73,6 +72,7 @@ export default function AdminOrdersPage() {
         }
     }
 
+    // Handle status update
     async function updateStatus(orderId: number, status: string) {
 
         try {
@@ -104,6 +104,7 @@ export default function AdminOrdersPage() {
         }
     }
 
+// Filtra ações disponíveis com base no status atual
     function getAvailableActions(status: string) {
         switch (status) {
             case "PENDENTE":
@@ -120,6 +121,7 @@ export default function AdminOrdersPage() {
         }
     }
 
+// Filtra pedidos com base no filtro selecionado
     const filteredOrders =
         statusFilter === "TODOS"
             ? orders

@@ -1,4 +1,5 @@
 package com.luxstore.backend.luxstore_api.product;
+import com.luxstore.backend.luxstore_api.category.Category;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -13,8 +14,9 @@ public class Product {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private ProductCategory category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Enumerated(EnumType.STRING)
     private ProductBadge badge;
@@ -32,47 +34,91 @@ public class Product {
     private Boolean isBestSeller;
 
     // getters e setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     // NAME
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     // CATEGORY
-    public ProductCategory getCategory() { return category; }
-    public void setCategory(ProductCategory category) { this.category = category;}
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     // BADGE
-    public ProductBadge getBadge() { return badge; } 
-    public void setBadge(ProductBadge badge) { this.badge = badge;}
+    public ProductBadge getBadge() {
+        return badge;
+    }
+
+    public void setBadge(ProductBadge badge) {
+        this.badge = badge;
+    }
 
     // PRICE
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price;}
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
     // IMAGE
-    public String getImage() {  return image;}
-    public void setImage(String image) { this.image = image;}
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     // DESCRIPTION
-    public String getDescription() { return description;}
-    public void setDescription(String description) {this.description = description;}
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     // DETAILS
-    public String getDetails() { return details; }
-    public void setDetails(String details) { this.details = details;}
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
     public boolean isActive() {
         return active;
     }
+
     // ACTIVE
     public void setActive(boolean active) {
         this.active = active;
     }
+
     // BESTSELLER
     public Boolean getIsBestSeller() {
         return isBestSeller;
     }
+
     public void setIsBestSeller(Boolean isBestSeller) {
         this.isBestSeller = isBestSeller;
     }

@@ -20,4 +20,5 @@ public enum ProductCategory {
     public String getDescription() {
         return description;
     }
+
 }

@@ -71,7 +71,7 @@ export default function ProductDetailsPage() {
                     <div className="flex flex-col justify-center">
                         <div className="mb-4 flex flex-wrap items-center gap-3">
                             <span className="rounded-full bg-amber-400/10 px-4 py-1 text-sm text-amber-300">
-                                {formatCategory(product.category)}
+                                {product.category?.name}
                             </span>
 
                             {product.badge && (

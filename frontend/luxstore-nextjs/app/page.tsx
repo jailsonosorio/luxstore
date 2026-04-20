@@ -70,6 +70,7 @@ export default function Page() {
       });
   }, []);
 
+  // Filtra produtos por categoria
   return (
     <main className="min-h-screen bg-neutral-950 text-white">
       <section
@@ -77,7 +78,7 @@ export default function Page() {
         className="relative overflow-hidden border-b border-white/10"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.18),transparent_25%),radial-gradient(circle_at_left,rgba(255,255,255,0.06),transparent_20%)]" />
-       <section className="relative min-h-[20vh] flex justify-center pt-10 pb-0">
+        <section className="relative min-h-[20vh] flex justify-center pt-10 pb-0">
 
           {/* SEARCH */}
           <div className="w-full px-6">
@@ -104,7 +105,7 @@ export default function Page() {
           </div>
 
         </section>
-
+        
         <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 md:grid-cols-2 md:pt-4 pb-16">
           <div className="flex flex-col justify-center">
             <span className="mb-4 w-fit rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1 text-xs font-medium uppercase tracking-[0.2em] text-amber-300">
@@ -247,7 +248,7 @@ export default function Page() {
                 <button className="rounded-full border border-white/15 px-4 py-2 text-sm transition hover:border-amber-400/40 hover:text-amber-300">
 
                   <Link
-                    href={`/products?category=${encodeURIComponent(formatCategory(category.code))}`}
+                    href={`/products?categoryId=${encodeURIComponent(category.id)}`}
                   >
                     Explorar
                   </Link>
@@ -376,7 +377,7 @@ export default function Page() {
 
       <footer className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-8 text-sm text-white/50 md:flex-row md:items-center md:justify-between">
-          <p>© 2026 MorenoStore. Todos os direitos reservados.</p>
+          <p>© 2026 Jailson Osório. Todos os direitos reservados.</p>
           <div className="flex gap-4">
             <a href="#" className="hover:text-white">
               Facebook

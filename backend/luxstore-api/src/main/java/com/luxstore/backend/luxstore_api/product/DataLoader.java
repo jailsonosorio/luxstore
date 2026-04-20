@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.luxstore.backend.luxstore_api.category.Category;
 import com.luxstore.backend.luxstore_api.user.User;
 import com.luxstore.backend.luxstore_api.user.UserRepository;
 
@@ -21,7 +22,7 @@ public class DataLoader {
 
                 Product p = new Product();
                 p.setName("Relógio Executive Gold");
-                p.setCategory(ProductCategory.RELOGIOS);
+                p.setCategory(Category.class.cast(null)); // Ajuste para evitar erro de tipo
                 p.setBadge(ProductBadge.MAIS_VENDIDO);
                 p.setPrice(new BigDecimal("32500"));
                 p.setImage("/images/products/relogio_silver_gold.avif");
