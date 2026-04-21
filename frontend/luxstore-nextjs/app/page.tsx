@@ -4,6 +4,7 @@ import { formatCategory } from "@/utils/format";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useCart } from "../context/CartContext";
 
 export default function Page() {
   const whatsappMessage = `Olá, tenho interesse em fazer compras na loja:`;
@@ -14,10 +15,15 @@ export default function Page() {
   const [products, setProducts] = useState<any[]>([]);
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const { addToCart } = useCart();
 
   const newProducts = products
     .filter((p) => p.badge === "NOVO")
     .sort(() => 0.5 - Math.random())
+    .slice(0, 4);
+
+  const featuredCategories = categories
+    .filter((cat: any) => cat.destaque)
     .slice(0, 4);
 
   const benefits = [
@@ -227,11 +233,9 @@ export default function Page() {
         </div>
         {/*Categorias dinâmicas*/}
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          {categories.map((category) => (
-            <div
-              key={category.name}
-              className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5"
-            >
+          {featuredCategories.map((category: any) => (
+            <div key={category.id} className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/5">
+              {/* IMAGEM */}
               <div className="h-72 overflow-hidden">
                 <img
                   src={category.image}
@@ -243,7 +247,7 @@ export default function Page() {
               <div className="space-y-3 p-5">
                 <h3 className="text-xl font-semibold">{category.name}</h3>
                 <p className="text-sm leading-6 text-white/65">
-                  {category.desc}
+                  {category.description || "Explore os melhores produtos desta categoria"}
                 </p>
                 <button className="rounded-full border border-white/15 px-4 py-2 text-sm transition hover:border-amber-400/40 hover:text-amber-300">
 
@@ -325,7 +329,15 @@ export default function Page() {
                       {Number(product.price).toLocaleString("pt-PT")} CVE
                     </span>
 
-                    <button className="rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-neutral-950">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault(); // 🔥 MUITO IMPORTANTE (porque estás dentro de Link)
+                        e.stopPropagation(); // 🔥 evita conflitos
+                        addToCart(product);
+                        alert("Produto adicionado!");
+                      }}
+                      className="rounded-full border border-white/15 px-4 py-2 text-sm transition hover:border-amber-400/40 hover:text-amber-300"
+                    >
                       Adicionar
                     </button>
                   </div>

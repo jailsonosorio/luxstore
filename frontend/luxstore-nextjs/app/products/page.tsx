@@ -171,7 +171,6 @@ export default function ProductsPage() {
 
                 {/* RESULTADOS */}
                 <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-
                     {loading ? (
                         <div className="col-span-full text-center text-white/60">
                             Carregando produtos...

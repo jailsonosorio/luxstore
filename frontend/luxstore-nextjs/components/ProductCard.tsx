@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Product } from "../data/products";
+import { Product } from "../types/products";
 
 type ProductCardProps = {
     product: Product;
@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <div className="flex items-center justify-between gap-3">
                     <h3 className="text-lg font-semibold text-white">{product.name}</h3>
                     <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-white/60">
-                        {product.category}
+                        {product.category?.name}
                     </span>
                 </div>
 

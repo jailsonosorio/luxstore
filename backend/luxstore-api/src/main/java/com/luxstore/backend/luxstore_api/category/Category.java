@@ -14,6 +14,9 @@ public class Category {
     private String image;
     private String code;
 
+    @Column(nullable = false)
+    private Boolean destaque = false;
+
     // getters e setters
     public Long getId() { return id; }
 
@@ -29,6 +32,14 @@ public class Category {
 
     public String getCode() {
         return code;
+    }
+
+    public Boolean getDestaque() {
+        return destaque;
+    }
+
+    public void setDestaque(Boolean destaque) {
+        this.destaque = destaque;
     }
 
     public void setCode(String code) {

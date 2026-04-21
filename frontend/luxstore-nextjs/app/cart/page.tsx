@@ -2,10 +2,8 @@
 
 import Link from "next/link";
 import { useCart } from "../../context/CartContext";
+import { Trash } from "lucide-react";
 
-/*function parsePrice(price: string) {
-    return Number(price.replaceAll(".", "").replace(" CVE", "").replace(",", "."));
-}*/
 
 export default function CartPage() {
     const {
@@ -31,6 +29,7 @@ export default function CartPage() {
                 )
                 .join("%0A")}%0A%0ATotal: ${total.toLocaleString("pt-PT")} CVE`;
 
+console.log("Items in cart:", items);
     return (
         <main className="min-h-screen bg-neutral-950 text-white">
 
@@ -84,7 +83,7 @@ export default function CartPage() {
                                             <div className="flex flex-wrap items-center gap-3">
                                                 <h2 className="text-xl font-semibold">{item.name}</h2>
                                                 <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-white/60">
-                                                    {item.category}
+                                                    {item.category?.name}
                                                 </span>
                                             </div>
 
@@ -119,8 +118,7 @@ export default function CartPage() {
                                             <button
                                                 onClick={() => removeFromCart(item.id)}
                                                 className="rounded-full border border-red-500/30 px-4 py-2 text-sm text-red-300 transition hover:border-red-500/60"
-                                            >
-                                                Remover
+                                            ><Trash size={15} />
                                             </button>
                                         </div>
                                     </div>
@@ -143,20 +141,13 @@ export default function CartPage() {
                                 </div>
                             </div>
 
-                            <div className="mt-8 flex flex-col gap-3">
-                                <a
-                                    href={`https://wa.me/2389200910?text=${whatsappText}`}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="rounded-full bg-amber-400 px-5 py-3 text-center font-semibold text-neutral-950"
-                                >
+                            <div className="mt-8 flex flex-col gap-3">                                
                                     <Link
                                         href="/checkout"
                                         className="rounded-full bg-amber-400 px-5 py-3 text-center font-semibold text-neutral-950"
                                     >
                                         Ir para checkout
                                     </Link>
-                                </a>
 
                                 <button
                                     onClick={clearCart}

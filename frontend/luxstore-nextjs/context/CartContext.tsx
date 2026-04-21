@@ -1,5 +1,6 @@
 "use client";
 
+import { Product } from "@/types/products";
 import {
     createContext,
     useContext,
@@ -7,7 +8,6 @@ import {
     useMemo,
     useState,
 } from "react";
-import { Product } from "../data/products";
 
 type CartItem = Product & {
     quantity: number;

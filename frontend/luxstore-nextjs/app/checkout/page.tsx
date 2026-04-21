@@ -103,7 +103,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="mt-10 grid gap-10 lg:grid-cols-2">
-                    {/* 🧾 FORMULÁRIO */}
+                    {/* FORMULÁRIO */}
                     <div className="space-y-6">
                         <div>
                             <input
@@ -169,7 +169,7 @@ export default function CheckoutPage() {
                             </div>
                         )}
                         <div className="mt-10 flex gap-4 flex-col sm:flex-row">
-                        {/* 🔥 NOVO BOTÃO BACKEND */}
+                        {/* NOVO BOTÃO BACKEND */}
                        <button
                             onClick={handleSubmitOrder}
                             disabled={loading}

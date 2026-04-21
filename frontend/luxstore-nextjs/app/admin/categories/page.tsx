@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "next/navigation";
-import { SquarePlus, SquarePen, SquareX, Save, ShieldX  } from "lucide-react";
+import { SquarePlus, SquarePen, SquareX, Save, Trash } from "lucide-react";
+import { normalizeText } from "@/utils/search";
 
 export default function AdminCategoriesPage() {
     const { isLoggedIn, isAdmin, loading, token } = useAuth();
@@ -12,11 +13,22 @@ export default function AdminCategoriesPage() {
     const [categories, setCategories] = useState<any[]>([]);
     const [loadingCategories, setLoadingCategories] = useState(true);
     const [showModal, setShowModal] = useState(false);
+    const [search, setSearch] = useState("");
     const [form, setForm] = useState({
         name: "",
         description: "",
         image: "",
         code: "",
+    });
+
+    const filteredCategories = categories.filter((category) => {
+        const text = normalizeText(search);
+
+        return (
+            normalizeText(category.name).includes(text) ||
+            normalizeText(category.description || "").includes(text) ||
+            normalizeText(category.code || "").includes(text)
+        );
     });
 
     // FUNÇÃO PARA CRIAR CATEGORIA
@@ -109,13 +121,26 @@ export default function AdminCategoriesPage() {
             <h1 className="text-4xl font-bold mb-6">Categorias</h1>
 
             {/* BOTÃO CRIAR */}
-            <div className="mb-6">
+            <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <button
                     onClick={() => setShowModal(true)}
-                    className="flex bg-amber-400 text-black px-4 py-2 gap-2 rounded-lg font-semibold hover:scale-[1.02] transition"
-                ><SquarePlus/>
+                    className="flex bg-amber-400 text-black px-2 py-2 gap-1 rounded-lg font-semibold hover:scale-[1.02] transition"
+                ><SquarePlus />
                     Criar
                 </button>
+                {/* PESQUISA */}
+                <div className="relative w-full lg:w-[400px] shadow-lg shadow-black/20 rounded-full">
+                    <input
+                        type="text"
+                        placeholder="Pesquisar categorias..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full rounded-full border border-white/10 bg-white/10 backdrop-blur-md px-10 py-3 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-400/40 focus:bg-white/15 transition"
+                    />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 ">
+                        🔍
+                    </span>
+                </div>
             </div>
 
             {/* LISTA */}
@@ -123,7 +148,7 @@ export default function AdminCategoriesPage() {
                 <p className="text-white/60">A carregar categorias...</p>
             ) : (
                 <div className="grid gap-6 md:grid-cols-3">
-                    {categories.map((category) => (
+                    {filteredCategories.map((category) => (
                         <div
                             key={category.id}
                             className="rounded-2xl border border-white/10 bg-white/5 p-4"
@@ -163,7 +188,7 @@ export default function AdminCategoriesPage() {
                                 <button
                                     onClick={() => handleDeleteCategory(category.id)}
                                     className="text-xs px-3 py-1 gap-1 bg-red-500 rounded"
-                                ><SquareX size={15} />
+                                ><Trash size={15} />
                                 </button>
                             </div>
                         </div>
@@ -214,14 +239,14 @@ export default function AdminCategoriesPage() {
                             <button
                                 onClick={() => setShowModal(false)}
                                 className="text-xs px-4 py-1 gap-1 bg-red-500 rounded">
-                                <ShieldX size={16} />
+                                <SquareX size={16} />
                             </button>
 
                             <button
                                 onClick={editingCategory ? handleUpdateCategory : handleCreateCategory}
                                 className="bg-amber-400 text-black px-4 py-2 rounded"
                             >
-                                {editingCategory ? <Save size={16} /> : <Save size={16} />}
+                                {<Save size={16} />}
                             </button>
 
                         </div>

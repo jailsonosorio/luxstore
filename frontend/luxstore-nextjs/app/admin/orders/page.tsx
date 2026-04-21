@@ -156,7 +156,7 @@ export default function AdminOrdersPage() {
                         </button>
                     ))}
                 </div>*/}
-                    <div className="grid gap-4 md:grid-cols-6 mt-6 mb-6">
+                    <div className="grid gap-2 md:grid-cols-6 mt-4 mb-6">
 
                         <div className="rounded-2xl bg-white/5 p-4 border border-white/10 ">
                             <p className="text-sm text-white/60">Total Pedidos</p>
@@ -183,7 +183,7 @@ export default function AdminOrdersPage() {
                             <h3 className="text-2xl font-bold">{closedOrders}</h3>
                         </div>
 
-                        <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
+                        <div className="rounded-2xl bg-green-50/10 p-4 border border-green-500/20">
                             <p className="text-sm text-green-300">Faturação</p>
                             <h3 className="text-2xl font-bold">
                                 {totalRevenue.toLocaleString("pt-PT")} CVE
@@ -195,7 +195,7 @@ export default function AdminOrdersPage() {
                     {loadingOrders ? (
                         <p className="mt-6 text-white/60">A carregar pedidos...</p>
                     ) : (
-                        <div className="mt-8 grid gap-6 md:grid-cols-2">
+                        <div className="mt-4 grid gap-3 md:grid-cols-3">{/*alterando o numero de colunas das cards */}
                             {filteredOrders.map((order) => (
                                 <div
                                     key={order.id}

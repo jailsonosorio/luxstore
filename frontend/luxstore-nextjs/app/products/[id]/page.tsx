@@ -95,7 +95,10 @@ export default function ProductDetailsPage() {
 
                         <div className="mt-8 flex flex-wrap gap-4">
                             <button
-                                onClick={() => addToCart(product)}
+                                onClick={() => {
+                                    addToCart(product);
+                                    alert("Produto adicionado!");
+                                }}
                                 className="rounded-full bg-white px-6 py-3 font-semibold text-neutral-950 transition hover:scale-[1.02]"
                             >
                                 Adicionar ao carrinho

@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { useRouter } from "next/navigation";
-import { SquarePen, SquarePlus, SquareX, Save, ShieldX   } from "lucide-react";
+import { SquarePen, SquarePlus, SquareX, Save, Trash } from "lucide-react";
+import { normalizeText } from "@/utils/search";
 
 export default function AdminProductsPage() {
   const { isLoggedIn, isAdmin, loading, token } = useAuth();
@@ -12,15 +13,25 @@ export default function AdminProductsPage() {
   const [loadingOrders, setLoadingOrders] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
-
   const [categories, setCategories] = useState([]);
-
+  const [search, setSearch] = useState("");
   const [form, setForm] = useState({
     name: "",
     description: "",
     price: "",
     image: "",
     categoryId: "",
+  });
+
+  // Filter products based on search
+  const filteredProducts = products.filter((product) => {
+    const text = normalizeText(search);
+
+    return (
+      normalizeText(product.name).includes(text) ||
+      normalizeText(product.description || "").includes(text) ||
+      normalizeText(product.category?.name || "").includes(text)
+    );
   });
 
   // Fetch categories for the dropdown
@@ -89,7 +100,7 @@ export default function AdminProductsPage() {
 
   // Handle delete product
   async function handleDeleteProduct(id: number) {
-    if (!confirm("Tens certeza que queres apagar este produto?")) return; 
+    if (!confirm("Tens certeza que queres apagar este produto?")) return;
 
     await fetch(`http://localhost:8080/api/products/${id}`, {
       method: "DELETE",
@@ -121,7 +132,7 @@ export default function AdminProductsPage() {
       <h1 className="text-4xl font-bold mb-6">Produtos</h1>
 
       {/* BOTÃO CRIAR */}
-      <div className="mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <button
           onClick={() => {
             setEditingProduct(null);
@@ -134,10 +145,24 @@ export default function AdminProductsPage() {
             });
             setShowModal(true);
           }}
-          className="flex bg-amber-400 text-black px-4 py-2 gap-2 rounded-lg font-semibold"
-        ><SquarePlus/>
+          className="flex bg-amber-400 text-black px-2 py-2 gap-1 rounded-lg font-semibold"
+        ><SquarePlus />
           Criar
         </button>
+
+        {/* PESQUISA */}
+        <div className="relative w-full lg:w-[400px] shadow-lg shadow-black/20 rounded-full">
+          <input
+            type="text"
+            placeholder="Pesquisar produtos..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-full border border-white/10 bg-white/10 backdrop-blur-md px-10 py-3 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-400/40 focus:bg-white/15 transition"
+          />
+          <span className="absolute left-3 top-2.5 text-white/40">
+            🔍
+          </span>
+        </div>
       </div>
 
       {/* LISTA */}
@@ -145,7 +170,7 @@ export default function AdminProductsPage() {
         <p className="text-white/60">A carregar produtos...</p>
       ) : (
         <div className="grid gap-6 md:grid-cols-3">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div
               key={product.id}
               className="rounded-2xl border border-white/10 bg-white/5 p-4"
@@ -159,7 +184,7 @@ export default function AdminProductsPage() {
               <h3 className="font-semibold">{product.name}</h3>
 
               <p className="text-sm text-white/60">
-                <p>{product.category?.name}</p>
+                {product.category?.name}
               </p>
 
               <p className="text-amber-300 font-bold mt-2">
@@ -167,7 +192,7 @@ export default function AdminProductsPage() {
               </p>
 
               <div className="mt-4 flex gap-2">
-                <button 
+                <button
                   onClick={() => {
                     setEditingProduct(product);
                     setForm({
@@ -186,7 +211,7 @@ export default function AdminProductsPage() {
                 <button
                   onClick={() => handleDeleteProduct(product.id)}
                   className="text-xs px-3 py-1 gap-1 bg-red-500 rounded"
-                ><SquareX size={15} />
+                ><Trash size={15} />
                 </button>
               </div>
             </div>
@@ -249,14 +274,14 @@ export default function AdminProductsPage() {
             <div className="flex justify-end gap-3 mt-6 ">
               <button onClick={() => setShowModal(false)}
                 className="text-xs px-4 py-1 gap-1 bg-red-500 rounded">
-                <ShieldX size={16} />
+                <SquareX size={16} />
               </button>
 
               <button
                 onClick={editingProduct ? handleUpdateProduct : handleCreateProduct}
                 className="bg-amber-400 text-black px-4 py-2 rounded"
               >
-                {editingProduct ? <Save size={16} /> : <Save size={16} />}
+                {<Save size={16} />}
               </button>
             </div>
 
