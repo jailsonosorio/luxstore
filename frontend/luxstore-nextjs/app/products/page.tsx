@@ -188,7 +188,7 @@ export default function ProductsPage() {
                             >
                                 <div className="relative h-72 overflow-hidden">
                                     <img
-                                        src={product.image}
+                                        src={`http://localhost:8080${product.image}`}
                                         alt={product.name}
                                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                     />

@@ -61,7 +61,7 @@ export default function ProductDetailsPage() {
                     <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-neutral-900">
                         <div className="h-[500px] overflow-hidden">
                             <img
-                                src={product.image}
+                                src={`http://localhost:8080${product.image}`}
                                 alt={product.name}
                                 className="h-full w-full object-cover"
                             />

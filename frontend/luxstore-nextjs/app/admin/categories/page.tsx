@@ -14,6 +14,7 @@ export default function AdminCategoriesPage() {
     const [loadingCategories, setLoadingCategories] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [search, setSearch] = useState("");
+    const [uploading, setUploading] = useState(false);
     const [form, setForm] = useState({
         name: "",
         description: "",
@@ -41,7 +42,7 @@ export default function AdminCategoriesPage() {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, image: form.image }),
             });
 
             if (!res.ok) throw new Error("Erro ao criar categoria");
@@ -77,7 +78,7 @@ export default function AdminCategoriesPage() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, image: form.image }),
             });
 
             setShowModal(false);
@@ -99,6 +100,24 @@ export default function AdminCategoriesPage() {
         } finally {
             setLoadingCategories(false);
         }
+    }
+
+    // FUNÇÃO PARA UPLOAD DE IMAGEM
+    async function handleUpload(file: File) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("http://localhost:8080/api/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        const url = await res.text();
+
+        setForm((prev) => ({
+            ...prev,
+            image: url,
+        }));
     }
 
     // VERIFICA SE O USUÁRIO ESTÁ LOGADO E É ADMIN, SE NÃO, REDIRECIONA PARA LOGIN
@@ -154,7 +173,7 @@ export default function AdminCategoriesPage() {
                             className="rounded-2xl border border-white/10 bg-white/5 p-4"
                         >
                             <img
-                                src={category.image}
+                                src={`http://localhost:8080${category.image}`}
                                 alt={category.name}
                                 className="h-40 w-full object-cover rounded-lg mb-3"
                             />
@@ -168,6 +187,8 @@ export default function AdminCategoriesPage() {
                             {/*<p className="text-amber-300 font-bold mt-2">
                                 {category.code}
                             </p>*/}
+
+
 
                             <div className="mt-4 flex gap-2">
                                 <button
@@ -231,11 +252,41 @@ export default function AdminCategoriesPage() {
                                 onChange={(e) => setForm({ ...form, code: e.target.value })}
                                 className="p-2 rounded bg-white/10 border border-white/10"
                             />
+                            <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+                                {/*<label className="mb-2 block text-sm text-white/70">
+                                    Imagem do produto
+                                </label>*/}
 
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) {
+                                            handleUpload(file);
+                                        }
+                                    }}
+                                    className="block w-full text-sm text-white file:mr-4 file:rounded-full file:border-0 file:bg-amber-400 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:opacity-90"
+                                />
+
+                                {uploading && (
+                                    <p className="mt-2 text-sm text-white/60">A fazer upload...</p>
+                                )}
+
+                                {form.image && (
+                                    <div className="mt-3">
+                                        <p className="mb-2 text-sm text-white/60">Pré-visualização</p>
+                                        <img
+                                            src={`http://localhost:8080${form.image}`}
+                                            alt="Preview"
+                                            className="h-32 w-full rounded-lg object-cover"
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex justify-end gap-3 mt-6">
-
                             <button
                                 onClick={() => setShowModal(false)}
                                 className="text-xs px-4 py-1 gap-1 bg-red-500 rounded">
@@ -250,7 +301,6 @@ export default function AdminCategoriesPage() {
                             </button>
 
                         </div>
-
                     </div>
                 </div>
             )}

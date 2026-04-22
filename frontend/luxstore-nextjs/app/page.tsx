@@ -169,7 +169,7 @@ export default function Page() {
               >
                 <div className="relative h-full w-full">
                   <img
-                    src={product.image}
+                    src={`http://localhost:8080${product.image}`}
                     alt={product.name}
                     className="h-full w-full object-cover"
                   />
@@ -238,7 +238,7 @@ export default function Page() {
               {/* IMAGEM */}
               <div className="h-72 overflow-hidden">
                 <img
-                  src={category.image}
+                  src={`http://localhost:8080${category.image}`}
                   alt={category.name}
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
                 />
@@ -297,7 +297,7 @@ export default function Page() {
                 {/* IMAGEM */}
                 <div className="h-72 overflow-hidden">
                   <img
-                    src={product.image}
+                    src={`http://localhost:8080${product.image}`}
                     alt={product.name}
                     className="h-full w-full object-cover transition duration-500 hover:scale-105"
                   />

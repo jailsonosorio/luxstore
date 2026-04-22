@@ -15,6 +15,7 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -72,6 +73,7 @@ export default function AdminProductsPage() {
       body: JSON.stringify({
         ...form,
         price: Number(form.price),
+        image: form.image,
         category: { id: Number(form.categoryId) }, // 🔥 AQUI
       }),
     });
@@ -89,6 +91,7 @@ export default function AdminProductsPage() {
       body: JSON.stringify({
         ...form,
         price: Number(form.price),
+        image: form.image,
         category: { id: form.categoryId },
       }),
     });
@@ -107,6 +110,24 @@ export default function AdminProductsPage() {
     });
 
     fetchProducts();
+  }
+
+  // Handle image upload
+  async function handleUpload(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("http://localhost:8080/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const url = await res.text();
+
+    setForm((prev) => ({
+      ...prev,
+      image: url,
+    }));
   }
 
   // Check auth and fetch products on mount
@@ -176,7 +197,7 @@ export default function AdminProductsPage() {
               className="rounded-2xl border border-white/10 bg-white/5 p-4"
             >
               <img
-                src={product.image}
+                src={`http://localhost:8080${product.image}`}
                 alt={product.name}
                 className="h-40 w-full object-cover rounded-lg mb-3"
               />
@@ -249,12 +270,12 @@ export default function AdminProductsPage() {
                 className="p-2 rounded bg-white/10"
               />
 
-              <input
+              {/*<input
                 placeholder="Imagem (URL)"
                 value={form.image}
                 onChange={(e) => setForm({ ...form, image: e.target.value })}
                 className="p-2 rounded bg-white/10"
-              />
+              />*/}
 
               <select
                 value={form.categoryId}
@@ -269,8 +290,39 @@ export default function AdminProductsPage() {
                 ))}
               </select>
 
-            </div>
+              <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+                {/*<label className="mb-2 block text-sm text-white/70">
+                  Imagem do produto
+                </label>*/}
 
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleUpload(file);
+                    }
+                  }}
+                  className="block w-full text-sm text-white file:mr-4 file:rounded-full file:border-0 file:bg-amber-400 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-black hover:file:opacity-90"
+                />
+
+                {uploading && (
+                  <p className="mt-2 text-sm text-white/60">A fazer upload...</p>
+                )}
+
+                {form.image && (
+                  <div className="mt-3">
+                    <p className="mb-2 text-sm text-white/60">Pré-visualização</p>
+                    <img
+                      src={`http://localhost:8080${form.image}`}
+                      alt="Preview"
+                      className="h-32 w-full rounded-lg object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
             <div className="flex justify-end gap-3 mt-6 ">
               <button onClick={() => setShowModal(false)}
                 className="text-xs px-4 py-1 gap-1 bg-red-500 rounded">
