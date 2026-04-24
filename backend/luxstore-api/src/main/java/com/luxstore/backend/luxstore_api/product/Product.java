@@ -19,7 +19,7 @@ public class Product {
     private Category category;
 
     @Enumerated(EnumType.STRING)
-    private ProductBadge badge;
+    private ProductBadge badge = ProductBadge.NOVO;
 
     private BigDecimal price;
 

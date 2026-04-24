@@ -17,6 +17,8 @@ public class Category {
     @Column(nullable = false)
     private Boolean destaque = false;
 
+    private boolean active = true;
+
     // getters e setters
     public Long getId() { return id; }
 
@@ -44,5 +46,13 @@ public class Category {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

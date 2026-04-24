@@ -10,7 +10,6 @@ export default function ProductsPage() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    const selectedCategory = searchParams.get("category");
     const categoryId = searchParams.get("categoryId");
     const selectedBadge = searchParams.get("badge");
     const initialSearch = searchParams.get("search") || "";
@@ -70,22 +69,14 @@ export default function ProductsPage() {
         // NORMALIZAÇÃO
         const normalizedSearch = normalizeText(search);
 
-        const name = normalizeText(product.name);
-        const description = normalizeText(product.description || "");
-        const category = normalizeText(product.category?.name)
-        const badge = normalizeText(product.badge || "");
-
-
-        // BUSCA INTELIGENTE (por palavras)
-        const words = normalizedSearch.split(" ").filter(Boolean);
-
         const matchSearch =
-            normalizeText(product.name).includes(normalizeText(search)) ||
-            normalizeText(product.description).includes(normalizeText(search)) ||
-            normalizeText(product.category?.name).includes(normalizeText  (search));
+            normalizeText(product.name).includes(normalizedSearch) ||
+            normalizeText(product.description).includes(normalizedSearch) ||
+            normalizeText(product.category?.name).includes(normalizedSearch);
 
         return matchCategory && matchBadge && matchSearch;
     });
+
     console.log("Produtos filtrados:", filteredProducts);
     return (
         <main className="min-h-screen bg-neutral-950 text-white">

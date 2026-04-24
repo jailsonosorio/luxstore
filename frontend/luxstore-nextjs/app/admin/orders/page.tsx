@@ -1,18 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../../../context/AuthContext";
-import { Package, ShoppingCart, MailCheck, LayoutGrid } from "lucide-react";
+import { Package, Clock, MailCheck, LayoutGrid, CheckCircle2, PackageCheck, XCircle, DollarSign } from "lucide-react";
+import { normalizeText } from "@/utils/search";
+import { text } from "stream/consumers";
 
 export default function AdminOrdersPage() {
     const { token, isLoggedIn, isAdmin, loading } = useAuth();
+    const searchParams = useSearchParams();
+    const statusFilter = searchParams.get("status") || "TODOS";
     const router = useRouter();
     const [orders, setOrders] = useState<any[]>([]);
     const [loadingOrders, setLoadingOrders] = useState(true);
-    const [statusFilter, setStatusFilter] = useState("TODOS");
+    const [search, setSearch] = useState("");
+    //const [statusFilter, setStatusFilter] = useState("TODOS");
     const pathname = usePathname();
 
+    //timeline de status
+    const STATUS_FLOW = [
+        "PENDENTE",
+        "CONFIRMADO",
+        "ENTREGUE",
+        "FECHADO",
+    ];
+
+    // Fetch orders with auth
     async function fetchOrders() {
         setLoadingOrders(true);
         try {
@@ -37,6 +51,7 @@ export default function AdminOrdersPage() {
         }
     }
 
+    // Verifica autenticação e autorização, e busca pedidos
     useEffect(() => {
         if (loading) return;
 
@@ -104,7 +119,7 @@ export default function AdminOrdersPage() {
         }
     }
 
-// Filtra ações disponíveis com base no status atual
+    // Filtra ações disponíveis com base no status atual
     function getAvailableActions(status: string) {
         switch (status) {
             case "PENDENTE":
@@ -121,11 +136,29 @@ export default function AdminOrdersPage() {
         }
     }
 
-// Filtra pedidos com base no filtro selecionado
-    const filteredOrders =
-        statusFilter === "TODOS"
-            ? orders
-            : orders.filter((order) => order.status === statusFilter);
+    // Atualiza query params para filtros
+    const sortedOrders = [...orders].sort((a, b) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+
+    // FILTRO COMBINADO (status + pesquisa)
+    const filteredOrders = sortedOrders.filter((order) => {
+        const matchStatus =
+            statusFilter === "TODOS"
+                ? true
+                : order.status === statusFilter;
+
+        const normalizedSearch = normalizeText(search);
+
+        const matchSearch =
+            normalizeText(order.customerName || "").includes(normalizedSearch) ||
+            normalizeText(order.address || "").includes(normalizedSearch) ||
+            normalizeText(order.status || "").includes(normalizedSearch);
+        //normalizeText(String(order.phone) || "").includes(normalizedSearch )
+        const matchPhone = String(order.phone || "").includes(search.trim());
+
+        return matchStatus && matchSearch && matchPhone;
+    });
 
     // ESTATÍSTICAS SIMPLES
     const totalOrders = filteredOrders.length;
@@ -135,56 +168,59 @@ export default function AdminOrdersPage() {
     const closedOrders = filteredOrders.filter(o => o.status === "FECHADO").length;
     const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total || 0), 0);
 
+    // Atualiza query params para filtros
     return (
         <div className="flex min-h-screen bg-neutral-950 text-white">
             {/* CONTEÚDO */}
             <main className="flex-1 px-5 py-6">
                 <div className="mx-auto max-w-6xl">
-                    <h1 className="text-4xl font-bold">Pedidos</h1>
+                    <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                        <h1 className="text-4xl font-bold">Pedidos</h1>
 
-                    {/* <div className="mt-6 flex flex-wrap gap-3">
-                    {["TODOS", "PENDENTE", "CONFIRMADO", "ENTREGUE", "FECHADO", "CANCELADO"].map((status) => (
-                        <button
-                            key={status}
-                            onClick={() => setStatusFilter(status)}
-                            className={`rounded-full px-4 py-2 text-sm border transition ${statusFilter === status
-                                ? "bg-amber-400 text-black border-amber-400"
-                                : "border-white/15 text-white/70 hover:border-white/40"
-                                }`}
-                        >
-                            {status}
-                        </button>
-                    ))}
-                </div>*/}
+                        {/* PESQUISA */}
+                        <div className="relative w-full lg:w-[400px] shadow-lg shadow-black/20 rounded-full">
+                            <input
+                                type="text"
+                                placeholder="Pesquisar pedidos..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full rounded-full border border-white/10 bg-white/10 backdrop-blur-md px-10 py-3 text-sm text-white placeholder:text-white/50 outline-none focus:border-amber-400/40 focus:bg-white/15 transition"
+                            />
+                            <span className="absolute left-3 top-2.5 text-white/40">
+                                🔍
+                            </span>
+                        </div>
+                    </div>
+
                     <div className="grid gap-2 md:grid-cols-6 mt-4 mb-6">
 
                         <div className="rounded-2xl bg-white/5 p-4 border border-white/10 ">
-                            <p className="text-sm text-white/60">Total Pedidos</p>
+                            <p className="flex items-center gap-1 text-sm text-white/60"><Package/>Total Pedidos</p>
                             <h3 className="text-2xl font-bold">{totalOrders}</h3>
                         </div>
 
                         <div className="rounded-2xl bg-yellow-500/10 p-4 border border-yellow-500/20">
-                            <p className="text-sm text-yellow-300">Pendentes</p>
+                            <p className="flex items-center gap-1 text-sm text-yellow-300"><Clock/>Pendentes</p>
                             <h3 className="text-2xl font-bold">{pendingOrders}</h3>
                         </div>
 
                         <div className="rounded-2xl bg-blue-500/10 p-4 border border-blue-500/20">
-                            <p className="text-sm text-blue-300">Confirmados</p>
+                            <p className="flex items-center gap-1 text-sm text-blue-300"><CheckCircle2/>Confirmados</p>
                             <h3 className="text-2xl font-bold">{confirmedOrders}</h3>
                         </div>
 
                         <div className="rounded-2xl bg-green-500/10 p-4 border border-green-500/20">
-                            <p className="text-sm text-green-300">Entregues</p>
+                            <p className="flex items-center gap-1 text-sm text-green-300"><PackageCheck/>Entregues</p>
                             <h3 className="text-2xl font-bold">{deliveredOrders}</h3>
                         </div>
 
                         <div className="rounded-2xl bg-gray-500/10 p-4 border border-gray-500/20">
-                            <p className="text-sm text-gray-300">Fechados</p>
+                            <p className="flex items-center gap-1 text-sm text-gray-300"><XCircle/>Fechados</p>
                             <h3 className="text-2xl font-bold">{closedOrders}</h3>
                         </div>
 
                         <div className="rounded-2xl bg-green-50/10 p-4 border border-green-500/20">
-                            <p className="text-sm text-green-300">Faturação</p>
+                            <p className="flex items-center gap-1 text-sm text-green-300"><DollarSign/>Faturação</p>
                             <h3 className="text-2xl font-bold">
                                 {totalRevenue.toLocaleString("pt-PT")} CVE
                             </h3>
@@ -202,7 +238,32 @@ export default function AdminOrdersPage() {
                                     className="rounded-2xl border border-white/10 bg-white/5 p-6 h-[370px] flex flex-col"
                                 >
                                     {/* HEADER */}
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center gap-2 mt-2">
+                                        {STATUS_FLOW.map((step, index) => {
+                                            const currentIndex = STATUS_FLOW.indexOf(order.status);
+
+                                            const isActive = index <= currentIndex;
+
+                                            return (
+                                                <div key={step} className="flex items-center gap-2">
+                                                    {/* CÍRCULO */}
+                                                    <div
+                                                        className={`h-3 w-3 rounded-full ${isActive ? "bg-amber-400" : "bg-white/20"
+                                                            }`}
+                                                    />
+
+                                                    {/* LINHA */}
+                                                    {index < STATUS_FLOW.length - 1 && (
+                                                        <div
+                                                            className={`h-[2px] w-6 ${index < currentIndex ? "bg-amber-400" : "bg-white/20"
+                                                                }`}
+                                                        />
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                    <div className="flex mt-4 justify-between items-center">
                                         <div>
                                             <p className="font-semibold">Pedido #{order.id}</p>
                                             <p className="text-sm text-white/60">{order.customerName}</p>
@@ -213,7 +274,9 @@ export default function AdminOrdersPage() {
                                                 order.status
                                             )}`}
                                         >
-                                            {order.status}
+                                            <div className="text-xs text-white/60 mt-1">
+                                                {order.status}
+                                            </div>
                                         </span>
                                     </div>
 

@@ -55,8 +55,11 @@ public class ProductController {
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
         existing.setImage(product.getImage());
-        existing.setBadge(product.getBadge().NOVO); //BY DEFAULT, ALL UPDATED PRODUCTS ARE MARKED AS "NEW"
+        existing.setBadge(product.getBadge()); //BY DEFAULT, ALL UPDATED PRODUCTS ARE MARKED AS "NEW"
         existing.setActive(true); //BY DEFAULT, ALL UPDATED PRODUCTS ARE MARKED AS ACTIVE
+        existing.setIsBestSeller(product.getIsBestSeller());
+        existing.setActive(product.isActive());
+
         if (product.getCategory() != null && product.getCategory().getId() != null) {
             var category = categoryRepository
                     .findById(product.getCategory().getId())

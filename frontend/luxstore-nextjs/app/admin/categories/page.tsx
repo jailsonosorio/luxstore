@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SquarePlus, SquarePen, SquareX, Save, Trash } from "lucide-react";
 import { normalizeText } from "@/utils/search";
 
 export default function AdminCategoriesPage() {
     const { isLoggedIn, isAdmin, loading, token } = useAuth();
+    const searchParams = useSearchParams();
     const router = useRouter();
     const [editingCategory, setEditingCategory] = useState<any | null>(null);
     const [categories, setCategories] = useState<any[]>([]);
@@ -20,9 +21,35 @@ export default function AdminCategoriesPage() {
         description: "",
         image: "",
         code: "",
+        active: true,
+        destaque: false,
     });
 
+    const filter = searchParams.get("filter") || "TODOS";
+    const normalizedSearch = normalizeText(search.trim());
+
     const filteredCategories = categories.filter((category) => {
+
+        // 🔥 FILTRO DESTAQUE
+        let matchFilter = true;
+
+        if (filter === "DESTAQUE") {
+            matchFilter = category.destaque === true;
+        } else if (filter === "SEM_DESTAQUE") {
+            matchFilter = category.destaque === false;
+        }
+
+        // 🔥 PESQUISA
+        const matchSearch =
+            normalizeText(category.name || "").includes(normalizedSearch) ||
+            normalizeText(category.description || "").includes(normalizedSearch)
+            normalizeText(category.code || "").includes(normalizedSearch);
+
+        // 🔥 RESULTADO FINAL
+        return matchFilter && matchSearch;
+    });
+
+    const filteredCategories2 = categories.filter((category) => {
         const text = normalizeText(search);
 
         return (
@@ -48,7 +75,7 @@ export default function AdminCategoriesPage() {
             if (!res.ok) throw new Error("Erro ao criar categoria");
 
             setShowModal(false);
-            setForm({ name: "", description: "", image: "", code: "" });
+            setForm({ name: "", description: "", image: "", code: "", active: true, destaque: false });
 
             fetchCategories(); // atualiza lista
         } catch (err) {
@@ -199,6 +226,8 @@ export default function AdminCategoriesPage() {
                                             description: category.description,
                                             image: category.image,
                                             code: category.code,
+                                            active: category.active,
+                                            destaque: category.destaque,
                                         });
                                         setShowModal(true);
                                     }}
@@ -239,12 +268,12 @@ export default function AdminCategoriesPage() {
                                 className="p-2 rounded bg-white/10 border border-white/10"
                             />
 
-                            <input
+                            {/*<input
                                 placeholder="URL da imagem"
                                 value={form.image}
                                 onChange={(e) => setForm({ ...form, image: e.target.value })}
                                 className="p-2 rounded bg-white/10 border border-white/10"
-                            />
+                            />*/}
 
                             <input
                                 placeholder="Código da categoria"
@@ -252,6 +281,27 @@ export default function AdminCategoriesPage() {
                                 onChange={(e) => setForm({ ...form, code: e.target.value })}
                                 className="p-2 rounded bg-white/10 border border-white/10"
                             />
+                            <div className="flex items-center gap-8 border-t border-white/10 pt-3">
+                                <label className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={form.active}
+                                        onChange={(e) => setForm({ ...form, active: e.target.checked })}
+                                    />
+                                    Ativo
+                                </label>
+                                <label className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={form.destaque}
+                                        onChange={(e) =>
+                                            setForm({ ...form, destaque: e.target.checked })
+                                        }
+                                    />
+                                    Mais vendido
+                                </label>
+                            </div>
+
                             <div className="rounded-lg border border-white/10 bg-white/5 p-3">
                                 {/*<label className="mb-2 block text-sm text-white/70">
                                     Imagem do produto

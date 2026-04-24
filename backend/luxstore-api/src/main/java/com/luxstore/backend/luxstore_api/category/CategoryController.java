@@ -46,6 +46,8 @@ public class CategoryController {
         existing.setDescription(category.getDescription());
         existing.setImage(category.getImage());
         existing.setCode(category.getCode());
+        existing.setDestaque(category.getDestaque());
+        existing.setActive(category.isActive());
 
         return ResponseEntity.ok(categoryRepository.save(existing));
     }

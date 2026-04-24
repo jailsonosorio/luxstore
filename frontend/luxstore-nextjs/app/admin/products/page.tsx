@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SquarePen, SquarePlus, SquareX, Save, Trash } from "lucide-react";
 import { normalizeText } from "@/utils/search";
 
 export default function AdminProductsPage() {
   const { isLoggedIn, isAdmin, loading, token } = useAuth();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [products, setProducts] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(true);
@@ -22,17 +23,35 @@ export default function AdminProductsPage() {
     price: "",
     image: "",
     categoryId: "",
+    active: true,
+    isBestSeller: false,
+    badge: "",
   });
 
-  // Filter products based on search
+  const badgeFilter = searchParams.get("badge") || "TODOS";
+  const bestSellerFilter = searchParams.get("bestSeller") || "TODOS";
+  const filter = searchParams.get("filter") || "TODOS";
+
+  // Filter products based on search and badge/bestSeller filters
+
   const filteredProducts = products.filter((product) => {
     const text = normalizeText(search);
-
-    return (
+    const matchSearch =
       normalizeText(product.name).includes(text) ||
       normalizeText(product.description || "").includes(text) ||
       normalizeText(product.category?.name || "").includes(text)
-    );
+
+    let matchFilter = true;
+
+    if (filter === "NOVO") {
+      matchFilter = product.badge === "NOVO";
+    } else if (filter === "POPULAR") {
+      matchFilter = product.badge === "POPULAR";
+    } else if (filter === "BEST_SELLER") {
+      matchFilter = product.isBestSeller === true;
+    }
+
+    return matchSearch && matchFilter;
   });
 
   // Fetch categories for the dropdown
@@ -79,7 +98,7 @@ export default function AdminProductsPage() {
     });
 
     setShowModal(false);
-    setForm({ name: "", description: "", price: "", image: "", categoryId: "" });
+    setForm({ name: "", description: "", price: "", image: "", categoryId: "", active: true, isBestSeller: false, badge: "" });
     fetchProducts();
   }
 
@@ -96,6 +115,7 @@ export default function AdminProductsPage() {
       }),
     });
 
+    alert("Produto atualizado com sucesso ✅");
     setShowModal(false);
     setEditingProduct(null);
     fetchProducts();
@@ -147,6 +167,7 @@ export default function AdminProductsPage() {
 
   if (loading) return null;
 
+
   // Render admin products page
   return (
     <div>
@@ -163,6 +184,9 @@ export default function AdminProductsPage() {
               price: "",
               image: "",
               categoryId: "",
+              active: true,
+              isBestSeller: false,
+              badge: "",
             });
             setShowModal(true);
           }}
@@ -221,7 +245,10 @@ export default function AdminProductsPage() {
                       description: product.description,
                       price: product.price.toString(),
                       image: product.image,
+                      active: product.active,
                       categoryId: product.category?.id.toString() || "",
+                      isBestSeller: product.isBestSeller,
+                      badge: product.badge,
                     });
                     setShowModal(true);
                   }}
@@ -270,13 +297,6 @@ export default function AdminProductsPage() {
                 className="p-2 rounded bg-white/10"
               />
 
-              {/*<input
-                placeholder="Imagem (URL)"
-                value={form.image}
-                onChange={(e) => setForm({ ...form, image: e.target.value })}
-                className="p-2 rounded bg-white/10"
-              />*/}
-
               <select
                 value={form.categoryId}
                 onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
@@ -289,6 +309,38 @@ export default function AdminProductsPage() {
                   </option>
                 ))}
               </select>
+
+              <select
+                value={form.badge}
+                onChange={(e) => setForm({ ...form, badge: e.target.value })}
+                className="p-2 rounded bg-white/10"
+              >
+                <option value="">Sem badge</option>
+                <option value="NOVO">Novo</option>
+                <option value="POPULAR">Popular</option>
+                <option value="PROMOCAO">Promoção</option>
+              </select>
+
+              <div className="flex items-center gap-8 border-t border-white/10 pt-3">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={form.active}
+                    onChange={(e) => setForm({ ...form, active: e.target.checked })}
+                  />
+                  Ativo
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={form.isBestSeller}
+                    onChange={(e) =>
+                      setForm({ ...form, isBestSeller: e.target.checked })
+                    }
+                  />
+                  Mais vendido
+                </label>
+              </div>
 
               <div className="rounded-lg border border-white/10 bg-white/5 p-3">
                 {/*<label className="mb-2 block text-sm text-white/70">
@@ -336,11 +388,9 @@ export default function AdminProductsPage() {
                 {<Save size={16} />}
               </button>
             </div>
-
           </div>
         </div>
       )}
     </div>
-
   );
 }

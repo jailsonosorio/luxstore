@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { LayoutGrid, LogOut, MonitorCog, ShoppingCart } from "lucide-react";
+import { LayoutDashboard, LayoutGrid, LockKeyhole, LogOut, MonitorCog, ShoppingCart, User } from "lucide-react";
 
 export default function Header() {
     const { cartCount } = useCart();
@@ -51,14 +51,14 @@ function handleLogout() {
                     {!isLoggedIn && (
                      <>
                     <button className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-white/30 hover:text-white">
-                        Minha Area
+                        <User />
                     </button>
                     <button className="rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:scale-[1.02]">
                         <Link
                         href="/admin/login"
                         className="text-sm text-white/70 hover:text-amber-300"
                         >
-                        Admin
+                        <LockKeyhole />
                         </Link>
                     </button>
                     </>
@@ -68,7 +68,7 @@ function handleLogout() {
                         <Link 
                             href="/admin/orders"
                             className="flex rounded-full gap-3 border border-white/15 px-4 py-2 text-sm text-white/80 hover:text-white"
-                        ><MonitorCog size={18} />
+                        ><LayoutDashboard size={18} />
                         </Link>
 
                         <button 

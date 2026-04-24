@@ -72,7 +72,7 @@ console.log("Items in cart:", items);
                                 >
                                     <div className="h-40 w-full overflow-hidden rounded-2xl md:w-44">
                                         <img
-                                            src={item.image}
+                                            src={`http://localhost:8080${item.image}`}
                                             alt={item.name}
                                             className="h-full w-full object-cover"
                                         />
