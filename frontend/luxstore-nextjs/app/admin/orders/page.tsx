@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { Package, Clock, MailCheck, LayoutGrid, CheckCircle2, PackageCheck, XCircle, DollarSign } from "lucide-react";
 import { normalizeText } from "@/utils/search";
 import { text } from "stream/consumers";
@@ -37,7 +37,7 @@ export default function AdminOrdersPage() {
             });
 
             if (res.status === 401 || res.status === 403) {
-                router.push("/admin/login");
+                router.push("/auth/login");
                 return;
             }
 
@@ -56,7 +56,7 @@ export default function AdminOrdersPage() {
         if (loading) return;
 
         if (!isLoggedIn || !isAdmin) {
-            router.push("/admin/login");
+            router.push("/auth/login");
             return;
         }
 

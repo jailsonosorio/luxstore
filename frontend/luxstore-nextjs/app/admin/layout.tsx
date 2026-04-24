@@ -65,7 +65,7 @@ export default function AdminLayout({
             Menu
           </h1>
 
-          <div className="flex flex-col gap-2 mt-6">
+          <div className="mt-3 border-t border-white/10 pt-6 flex flex-col gap-2">
 
             <Link
               href="/admin/orders"
@@ -102,35 +102,16 @@ export default function AdminLayout({
 
           </div>
         </div>
-        <div className="mt-8">
-          {/*<p className="mb-1 text-lg font-bold tracking-wide text-white/80">
-              Filtrar por Status
-            </p>
-
-           <div className="mt-6 flex flex-col gap-1">
-              {["TODOS", "PENDENTE", "CONFIRMADO", "ENTREGUE", "FECHADO", "CANCELADO"].map((status) => (
-                <button
-                  key={status}
-                  onClick={() => handleStatusFilter(status, "status")}
-                  className={`rounded-full border px-4 py-2 text-left text-sm transition ${
-                    statusFilter === status
-                      ? "bg-amber-400 font-semibold text-black"
-                      : "border-white/15 text-white/70 hover:border-white/40"
-                  }`}
-                >
-                  {status}
-                </button>
-              ))}
-            </div>*/}
+        <div className="mt-2">
           {/* FILTROS DINÂMICOS */}
-          <div className="mt-8 border-t border-white/10 pt-6">
+          <div className="mt-7 border-t border-white/10 pt-6">
             {pathname === "/admin/orders" && (
               <>
                 <p className="mb-3 text-lg font-bold tracking-wide text-white/80">
                   Filtrar por Status
                 </p>
 
-                <div className="mt-4 flex flex-col gap-2">
+                <div className="mt-3 flex flex-col gap-2">
                   {["TODOS", "PENDENTE", "CONFIRMADO", "ENTREGUE", "FECHADO", "CANCELADO"].map((status) => (
                     <button
                       key={status}

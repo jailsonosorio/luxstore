@@ -30,9 +30,14 @@ export default function AdminLoginPage() {
 
             const data = await res.json();
 
-            login(data.token, data.role); // 🔥 AQUI
+            login(data.token, data.role);
 
-            router.push("/admin/orders");
+            // REDIRECIONAMENTO INTELIGENTE
+            if (data.role === "ADMIN") {
+                router.push("/admin/orders"); //area do admin
+            } else {
+                router.push("/account"); //área do cliente
+            }
 
         } catch (err: any) {
             setError(err.message);
@@ -44,8 +49,8 @@ export default function AdminLoginPage() {
     return (
         <main className="min-h-screen bg-neutral-950 text-white flex items-center justify-center px-6">
             <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-8">
-                <h1 className="text-3xl font-bold">Login Admin</h1>
-                <p className="mt-2 text-white/60">Aceda ao painel administrativo.</p>
+                <h1 className="text-3xl font-bold">Login</h1>
+                <p className="mt-2 text-white/60">Aceda à sua conta.</p>
 
                 <div className="mt-8 space-y-4">
                     <input
@@ -77,6 +82,15 @@ export default function AdminLoginPage() {
                     >
                         {loading ? "A entrar..." : "Entrar"}
                     </button>
+                    <p className="mt-6 text-sm text-white/60 text-center">
+                        Não tens conta?{" "}
+                        <span
+                            onClick={() => router.push("/auth/register")}
+                            className="text-amber-400 cursor-pointer"
+                        >
+                            Criar conta
+                        </span>
+                    </p>
                 </div>
             </div>
         </main>

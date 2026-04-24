@@ -55,7 +55,7 @@ function handleLogout() {
                     </button>
                     <button className="rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-neutral-950 transition hover:scale-[1.02]">
                         <Link
-                        href="/admin/login"
+                        href="/auth/login"
                         className="text-sm text-white/70 hover:text-amber-300"
                         >
                         <LockKeyhole />

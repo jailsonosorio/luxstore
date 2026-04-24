@@ -1,7 +1,7 @@
 "use client";
 
+import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SquarePlus, SquarePen, SquareX, Save, Trash } from "lucide-react";
 import { normalizeText } from "@/utils/search";
@@ -152,7 +152,7 @@ export default function AdminCategoriesPage() {
         if (loading) return;
 
         if (!isLoggedIn || !isAdmin) {
-            router.push("/admin/login");
+            router.push("/auth/login");
             return;
         }
 

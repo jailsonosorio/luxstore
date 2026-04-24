@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
     token: string | null;
+    role: string | null;
     isLoggedIn: boolean;
     isAdmin: boolean;
     loading: boolean; 
@@ -23,10 +24,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // 🔥 RECARREGAR DADOS DO LOCALSTORAGE
     useEffect(() => {
         const storedToken = localStorage.getItem("luxstore_token");
-        const role = localStorage.getItem("luxstore_role");
+        const storedRole  = localStorage.getItem("luxstore_role");
 
         if (storedToken) {
             setToken(storedToken);
+            setRole(storedRole);
             setIsLoggedIn(true);
             setIsAdmin(role === "ADMIN");
         }
@@ -39,6 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("luxstore_role", role);
 
         setToken(token);
+        setRole(role);
         setIsLoggedIn(true);
         setIsAdmin(role === "ADMIN");
     }
@@ -56,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         <AuthContext.Provider
             value={{
                 token,
+                role,
                 isLoggedIn,
                 isAdmin,
                 loading,
