@@ -5,7 +5,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Package, Clock, MailCheck, LayoutGrid, CheckCircle2, PackageCheck, XCircle, DollarSign } from "lucide-react";
 import { normalizeText } from "@/utils/search";
-import { text } from "stream/consumers";
 
 export default function AdminOrdersPage() {
     const { token, isLoggedIn, isAdmin, loading } = useAuth();
@@ -15,7 +14,6 @@ export default function AdminOrdersPage() {
     const [orders, setOrders] = useState<any[]>([]);
     const [loadingOrders, setLoadingOrders] = useState(true);
     const [search, setSearch] = useState("");
-    //const [statusFilter, setStatusFilter] = useState("TODOS");
     const pathname = usePathname();
 
     //timeline de status

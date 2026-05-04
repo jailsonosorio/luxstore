@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut, Package, User, MapPin, ShoppingCart } from "lucide-react";
-import { useAuth } from "../../context/AuthContext";
-import { useCart } from "../../context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 export default function AccountPage() {
   const router = useRouter();
