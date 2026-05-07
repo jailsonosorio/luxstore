@@ -33,6 +33,7 @@ public class ProductController {
     }
 
     @PostMapping
+    @Operation(summary = "Criar um novo produto")
     public Product create(@RequestBody Product product) {
 
         if (product.getCategory() != null && product.getCategory().getId() != null) {

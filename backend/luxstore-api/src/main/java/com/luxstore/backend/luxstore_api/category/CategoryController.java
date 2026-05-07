@@ -33,12 +33,14 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Exclusão de categorias")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         categoryRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualização de categorias")
     public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category category) {
         Category existing = categoryRepository.findById(id).orElseThrow();
 

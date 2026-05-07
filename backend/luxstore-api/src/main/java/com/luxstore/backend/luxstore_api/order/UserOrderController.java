@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.luxstore.backend.luxstore_api.user.User;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/user/orders")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name = "Usuário - Pedidos", description = "Operações de pedidos para usuários autenticados")
 public class UserOrderController {
 
     private final OrderRepository repository;
@@ -28,7 +30,7 @@ public class UserOrderController {
     }
 
     @GetMapping
-    @Operation
+    @Operation(summary = "Obter pedidos do usuário")
     public List<Order> getMyOrders(Authentication auth) {
 
         String email = auth.getName();
@@ -39,7 +41,7 @@ public class UserOrderController {
     }
 
     @PutMapping("/{id}/confirm")
-    @Operation
+    @Operation(summary = "Confirmar entrega de um pedido")
     public Order confirmDelivery(@PathVariable Long id) {
 
         Order order = repository.findById(id)
@@ -53,20 +55,19 @@ public class UserOrderController {
     @GetMapping("/{id}")
     @Operation(summary = "Obter detalhes de um pedido específico do usuário")
     public Order getOrderById(
-        @PathVariable Long id,
-        Authentication auth
-) {
+            @PathVariable Long id,
+            Authentication auth) {
 
-    String username = auth.getName();
+        String username = auth.getName();
 
-    Order order = repository.findById(id)
-            .orElseThrow();
+        Order order = repository.findById(id)
+                .orElseThrow();
 
-    // segurança: pedido pertence ao utilizador?
-    if (!order.getUserEmail().equals(username)) {
-        throw new RuntimeException("Acesso negado");
+        // segurança: pedido pertence ao utilizador?
+        if (!order.getUserEmail().equals(username)) {
+            throw new RuntimeException("Acesso negado");
+        }
+
+        return order;
     }
-
-    return order;
-}
 }
