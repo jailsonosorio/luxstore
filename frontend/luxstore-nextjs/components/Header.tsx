@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { LayoutDashboard, LayoutGrid, LockKeyhole, LogOut, MonitorCog, ShoppingCart, User } from "lucide-react";
 
 export default function Header() {
@@ -48,6 +48,7 @@ function handleLogout() {
                         className="flex rounded-full gap-1 border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-white/30 hover:text-white"
                     ><ShoppingCart  size={18} />({cartCount})                        
                     </Link>
+                    {/* EXIBIR BOTÕES DIFERENTES PARA USUÁRIOS LOGADOS, ADMIN E VISITANTES */}
                     {!isLoggedIn && (
                      <>
                     <button className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 transition hover:border-white/30 hover:text-white">
@@ -63,6 +64,21 @@ function handleLogout() {
                     </button>
                     </>
                     )}
+                    {isLoggedIn && !isAdmin && (
+                    <>
+                        <Link
+                            href="/account"
+                            className="flex rounded-full gap-3 border border-white/15 px-4 py-2 text-sm text-white/80 hover:text-white"
+                        ><User size={18} />
+                        </Link>
+                        <button 
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 rounded-full border border-red-500/30 px-4 py-2 text-sm font-semibold text-red-300 transition hover:border-red-500/60"
+                        ><LogOut size={18} />
+                        </button>
+                    </>
+                    )}
+                    {/* USUÁRIO LOGADO MAS NÃO É ADMIN */}
                     {isLoggedIn && isAdmin && (
                     <>
                         <Link 
@@ -73,7 +89,7 @@ function handleLogout() {
 
                         <button 
                             onClick={handleLogout}
-                            className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:scale-[1.02]"
+                            className="flex items-center gap-2 rounded-full border border-red-500/30 px-4 py-2 text-sm font-semibold text-red-300 transition hover:border-red-500/60"
                         ><LogOut size={18} />
                         </button>
                     </>

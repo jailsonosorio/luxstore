@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "@/context/CartContext";
 import Link from "next/link";
 import router from "next/router";
+import { useAuth } from "@/context/AuthContext";
 
 
 export default function CheckoutPage() {
+    const { token, isLoggedIn, isAdmin} = useAuth();
     const { items, clearCart } = useCart();
     const [error, setError] = useState("");
     const [name, setName] = useState("");
@@ -47,6 +49,7 @@ export default function CheckoutPage() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                 Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(orderData),
         });

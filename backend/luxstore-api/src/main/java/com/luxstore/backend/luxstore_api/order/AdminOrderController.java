@@ -29,9 +29,12 @@ public class AdminOrderController {
     }
 
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Atualizar status do pedido")
     public Order updateStatus(@PathVariable Long id, @RequestParam String status) {
-        Order order = repository.findById(id).orElseThrow();
+        Order order = repository.findById(id).
+            orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+        
 
         order.setStatus(status);
         return repository.save(order);

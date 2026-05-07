@@ -48,13 +48,13 @@ export default function AccountPage() {
             </p>
           </div>
 
-          <button
+          {/*<button
             onClick={handleLogout}
             className="flex items-center gap-2 rounded-full border border-red-500/30 px-5 py-3 text-sm font-semibold text-red-300 transition hover:border-red-500/60"
           >
             <LogOut size={18} />
             Sair
-          </button>
+          </button>*/}
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">

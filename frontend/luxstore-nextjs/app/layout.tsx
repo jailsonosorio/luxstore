@@ -1,7 +1,7 @@
 import "./globals.css";
 import Header from "../components/Header";
-import { CartProvider } from "../context/CartContext";
-import { AuthProvider } from "../context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata = {
   title: "MorenoStore",

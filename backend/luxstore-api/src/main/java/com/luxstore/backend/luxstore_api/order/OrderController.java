@@ -1,5 +1,6 @@
 package com.luxstore.backend.luxstore_api.order;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +15,11 @@ public class OrderController {
     }
 
     @PostMapping
-    public Order createOrder(@RequestBody Order order) {
+    public Order createOrder(@RequestBody Order order, Authentication auth  ) {
+        String email = auth.getName(); // vem do token
+
+        order.setUserEmail(email);
+        
         return service.save(order);
     }
 }

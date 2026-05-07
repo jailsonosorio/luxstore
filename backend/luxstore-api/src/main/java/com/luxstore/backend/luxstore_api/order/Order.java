@@ -15,6 +15,7 @@ public class Order {
     private String customerName;
     private String phone;
     private String address;
+    private String userEmail;
 
     private Double total;
 
@@ -89,6 +90,14 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
 }

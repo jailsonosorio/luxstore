@@ -55,8 +55,8 @@ public class ProductController {
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
         existing.setImage(product.getImage());
-        existing.setBadge(product.getBadge()); //BY DEFAULT, ALL UPDATED PRODUCTS ARE MARKED AS "NEW"
-        existing.setActive(true); //BY DEFAULT, ALL UPDATED PRODUCTS ARE MARKED AS ACTIVE
+        existing.setBadge(product.getBadge()); // BY DEFAULT, ALL UPDATED PRODUCTS ARE MARKED AS "NEW"
+        existing.setActive(true); // BY DEFAULT, ALL UPDATED PRODUCTS ARE MARKED AS ACTIVE
         existing.setIsBestSeller(product.getIsBestSeller());
         existing.setActive(product.isActive());
 
