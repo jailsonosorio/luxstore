@@ -26,22 +26,6 @@ export default function AdminLayout({
     router.push(`${pathname}?filter=${value}`);
   }
 
-  /*function handleStatusFilter(status: string) {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (status === "TODOS") {
-      params.delete("status");
-    } else {
-      params.set("status", status);
-    }
-
-    if (pathname === "/admin/orders") {
-      router.push(`/admin/orders?${params.toString()}`);
-    } else {
-      router.push(`/admin/orders?${params.toString()}`);
-    }
-  }*/
-
   function updateQueryParam(key: string, value: string) {
     const params = new URLSearchParams(searchParams.toString());
 

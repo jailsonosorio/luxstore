@@ -52,11 +52,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/categories/**").permitAll()
                         .requestMatchers("/api/products/best-sellers").permitAll()
-                        .requestMatchers("/api/user/orders").permitAll()
+                        .requestMatchers("/api/user/**").permitAll()
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/products/**",
                                 "/api/categories/**",
+                                "/api/user/**",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
                                 "/swagger-ui/**",

@@ -36,6 +36,9 @@ function handleLogout() {
                     <a href="#produtos" className="transition hover:text-white">
                         Produtos
                     </a>
+                    <Link href="/products" className="transition hover:text-white ">
+                        Catalogo
+                    </Link>
                     <a href="#sobre" className="transition hover:text-white">
                         Sobre
                     </a>
