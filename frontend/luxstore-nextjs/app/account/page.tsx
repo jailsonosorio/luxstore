@@ -81,7 +81,7 @@ export default function AccountPage() {
           </Link>
 
           <Link
-            href="/account/address"
+            href="/account/addresses"
             className="rounded-[2rem] border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:border-amber-400/30"
           >
             <MapPin className="mb-4 text-amber-300" size={28} />

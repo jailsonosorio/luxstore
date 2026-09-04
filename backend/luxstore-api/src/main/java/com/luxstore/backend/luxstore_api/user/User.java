@@ -2,6 +2,8 @@ package com.luxstore.backend.luxstore_api.user;
 
 import java.time.LocalDate;
 
+import com.luxstore.backend.luxstore_api.address.Address;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -24,7 +26,7 @@ public class User {
     private String postalCode;
     private LocalDate birthDate;
     private String profileImage;
-    
+
     public String getFullName() {
         return fullName;
     }
@@ -137,5 +139,16 @@ public class User {
 
     public void setProvider(String provider) {
         this.provider = provider;
+    }
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Address> addresses = new java.util.ArrayList<>();
+
+    public java.util.List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(java.util.List<Address> addresses) {
+        this.addresses = addresses;
     }
 }

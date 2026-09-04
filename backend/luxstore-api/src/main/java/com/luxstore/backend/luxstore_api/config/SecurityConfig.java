@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/upload/**").permitAll()                        
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/api/account/address/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/orders/**").permitAll()
                         .requestMatchers("/api/products/**").permitAll()
@@ -58,6 +59,7 @@ public class SecurityConfig {
                                 "/api/products/**",
                                 "/api/categories/**",
                                 "/api/user/**",
+                                "/api/account/address/**",
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml",
                                 "/swagger-ui/**",

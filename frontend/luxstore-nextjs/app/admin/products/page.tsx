@@ -81,7 +81,6 @@ export default function AdminProductsPage() {
 
   // Handle create product
   async function handleCreateProduct() {
-    console.log("clicou criar"); // 👈 adiciona isto
     console.log("TOKEN:", token);
     await fetch("http://localhost:8080/api/products", {
       method: "POST",

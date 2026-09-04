@@ -360,7 +360,6 @@ export default function OrdersPage() {
 
                                         return (
                                             <div key={step} className="flex items-center gap-2">
-
                                                 <div
                                                     className={`h-3 w-3 rounded-full ${isActive
                                                         ? "bg-amber-400"

@@ -30,7 +30,9 @@ export default function AdminLoginPage() {
 
             const data = await res.json();
 
-            login(data.token, data.role);
+            //console.log("LOGIN DATA:", data);
+
+            login(data.token, data.role, data.username);
 
             // REDIRECIONAMENTO INTELIGENTE
             if (data.role === "ADMIN") {

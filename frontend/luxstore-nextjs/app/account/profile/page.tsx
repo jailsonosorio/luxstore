@@ -205,7 +205,7 @@ export default function ProfilePage() {
     return (
         <main className="min-h-screen bg-neutral-950 text-white px-5 py-6">
 
-            <div className="mx-auto max-w-3xl">
+            <div className="mx-auto max-w-4xl">
 
                 {/* HEADER */}
                 <div className="mb-8">
@@ -297,184 +297,186 @@ export default function ProfilePage() {
                     <div className="space-y-6">
 
                         {/* USERNAME */}
-                        <div>
-                            <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
-                                <User size={16} />
-                                Username
-                            </label>
+                        <div className="grid gap-6 md:grid-cols-2">
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <User size={16} />
+                                    Username
+                                </label>
 
-                            <input
-                                type="text"
-                                value={form.username}
-                                disabled
-                                className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white/40 outline-none"
-                            />
-                        </div>
+                                <input
+                                    type="text"
+                                    value={form.username}
+                                    disabled
+                                    className="w-full rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-white/40 outline-none"
+                                />
+                            </div>
 
-                        {/* PHONE */}
-                        <div>
-                            <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
-                                <Phone size={16} />
-                                Telefone
-                            </label>
+                            {/* FULL NAME */}
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <User size={16} />
+                                    Nome Completo
+                                </label>
+                                <input
+                                    type="text"
+                                    value={form.fullName}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            fullName: e.target.value,
+                                        })
+                                    }
+                                    disabled={!editing}
+                                    className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
+                                        ? "bg-black/20"
+                                        : "bg-white/5 text-white/50"
+                                        }`}
+                                />
+                            </div>
 
-                            <input
-                                type="text"
-                                value={form.phone}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        phone: e.target.value,
-                                    })
-                                }
-                                disabled={!editing}
-                                className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
-                                    ? "bg-black/20"
-                                    : "bg-white/5 text-white/50"
-                                    }`}
-                            />
-                        </div>
+                            {/* EMAIL */}
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <Mail size={16} />
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    value={form.email}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            email: e.target.value,
+                                        })
+                                    }
+                                    disabled={!editing}
+                                    className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
+                                        ? "bg-black/20"
+                                        : "bg-white/5 text-white/50"
+                                        }`}
+                                />
+                            </div>
 
-                        {/* ADDRESS */}
-                        <div>
-                            <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
-                                <MapPin size={16} />
-                                Morada
-                            </label>
+                            {/* ADDRESS */}
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <MapPin size={16} />
+                                    Morada
+                                </label>
 
-                            <textarea
-                                value={form.address}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        address: e.target.value,
-                                    })
-                                }
-                                rows={4}
-                                className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
-                                    ? "bg-black/20"
-                                    : "bg-white/5 text-white/50"
-                                    }`}
-                            />
-                        </div>
+                                <textarea
+                                    value={form.address}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            address: e.target.value,
+                                        })
+                                    }
+                                    rows={4}
+                                    className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
+                                        ? "bg-black/20"
+                                        : "bg-white/5 text-white/50"
+                                        }`}
+                                />
+                            </div>
 
-                        {/* EMAIL */}
-                        <div>
-                            <label className="mb-2 mt-6 flex items-center gap-2 text-sm text-white/60">
-                                <Mail size={16} />
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                value={form.email}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        email: e.target.value,
-                                    })
-                                }
-                                disabled={!editing}
-                                className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
-                                    ? "bg-black/20"
-                                    : "bg-white/5 text-white/50"
-                                    }`}
-                            />
-                        </div>
+                            {/*Gender*/}
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <VenusAndMars size={16} />
+                                    Gênero
+                                </label>
+                                <select
+                                    value={form.gender}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            gender: e.target.value,
+                                        })
+                                    }
+                                    disabled={!editing}
+                                    className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
+                                        ? "bg-black/20"
+                                        : "bg-white/5 text-white/50"
+                                        }`}
+                                >
+                                    <option value="">Selecione</option>
+                                    <option value="male">Masculino</option>
+                                    <option value="female">Feminino</option>
+                                    <option value="other">Outro</option>
+                                </select>
+                            </div>
 
-                        {/* FULL NAME */}
-                        <div>
-                            <label className="mb-2 mt-6 flex items-center gap-2 text-sm text-white/60">
-                                <User size={16} />
-                                Nome Completo
-                            </label>
-                            <input
-                                type="text"
-                                value={form.fullName}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        fullName: e.target.value,
-                                    })
-                                }
-                                disabled={!editing}
-                                className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
-                                    ? "bg-black/20"
-                                    : "bg-white/5 text-white/50"
-                                    }`}
-                            />
-                        </div>
+                            {/*Birth Date*/}
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <Calendar size={16} />
+                                    Data de Nascimento
+                                </label>
+                                <input
+                                    type="date"
+                                    value={form.birthDate}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            birthDate: e.target.value,
+                                        })
+                                    }
+                                    disabled={!editing}
+                                    className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
+                                        ? "bg-black/20"
+                                        : "bg-white/5 text-white/50"
+                                        }`}
+                                />
+                            </div>
 
-                        {/* POSTAL CODE */}
-                        <div>
-                            <label className="mb-2 mt-6 flex items-center gap-2 text-sm text-white/60">
-                                <MapPin size={16} />
-                                Código Postal
-                            </label>
-                            <input
-                                type="text"
-                                value={form.postalCode}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        postalCode: e.target.value,
-                                    })
-                                }
-                                disabled={!editing}
-                                className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
-                                    ? "bg-black/20"
-                                    : "bg-white/5 text-white/50"
-                                    }`}
-                            />
-                        </div>
+                            {/* PHONE */}
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <Phone size={16} />
+                                    Telefone
+                                </label>
 
-                        {/*Gender*/}
-                        <div>
-                            <label className="mb-2 mt-6 flex items-center gap-2 text-sm text-white/60">
-                                <VenusAndMars size={16} />
-                                Gênero
-                            </label>
-                            <select
-                                value={form.gender}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        gender: e.target.value,
-                                    })
-                                }
-                                disabled={!editing}
-                                className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
-                                    ? "bg-black/20"
-                                    : "bg-white/5 text-white/50"
-                                    }`}
-                            >
-                                <option value="">Selecione</option>
-                                <option value="male">Masculino</option>
-                                <option value="female">Feminino</option>
-                                <option value="other">Outro</option>
-                            </select>
-                        </div>
+                                <input
+                                    type="text"
+                                    value={form.phone}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            phone: e.target.value,
+                                        })
+                                    }
+                                    disabled={!editing}
+                                    className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
+                                        ? "bg-black/20"
+                                        : "bg-white/5 text-white/50"
+                                        }`}
+                                />
+                            </div>
 
-                        {/*Birth Date*/}
-                        <div>
-                            <label className="mb-2 mt-6 flex items-center gap-2 text-sm text-white/60">
-                                <Calendar size={16} />
-                                Data de Nascimento
-                            </label>
-                            <input
-                                type="date"
-                                value={form.birthDate}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        birthDate: e.target.value,
-                                    })
-                                }
-                                disabled={!editing}
-                                className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
-                                    ? "bg-black/20"
-                                    : "bg-white/5 text-white/50"
-                                    }`}
-                            />
+                            {/* POSTAL CODE */}
+                            <div>
+                                <label className="mb-2 flex items-center gap-2 text-sm text-white/60">
+                                    <MapPin size={16} />
+                                    Código Postal
+                                </label>
+                                <input
+                                    type="text"
+                                    value={form.postalCode}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            postalCode: e.target.value,
+                                        })
+                                    }
+                                    disabled={!editing}
+                                    className={`w-full rounded-2xl border border-white/10 px-4 py-3 outline-none ${editing
+                                        ? "bg-black/20"
+                                        : "bg-white/5 text-white/50"
+                                        }`}
+                                />
+                            </div>
                         </div>
 
                         {/*MEMBER ID*/}

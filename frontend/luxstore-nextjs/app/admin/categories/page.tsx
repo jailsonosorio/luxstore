@@ -61,7 +61,6 @@ export default function AdminCategoriesPage() {
 
     // FUNÇÃO PARA CRIAR CATEGORIA
     async function handleCreateCategory() {
-        console.log("clicou criar"); // 👈 adiciona isto
         try {
             const res = await fetch("http://localhost:8080/api/categories", {
                 method: "POST",

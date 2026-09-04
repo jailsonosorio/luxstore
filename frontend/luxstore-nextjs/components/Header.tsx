@@ -7,7 +7,7 @@ import { LayoutDashboard, LayoutGrid, LockKeyhole, LogOut, MonitorCog, ShoppingC
 
 export default function Header() {
     const { cartCount } = useCart();
-    const { isLoggedIn, isAdmin, logout } = useAuth();
+    const { isLoggedIn, isAdmin, username, logout } = useAuth();
 
 function handleLogout() {
     logout();
@@ -73,6 +73,7 @@ function handleLogout() {
                             href="/account"
                             className="flex rounded-full gap-3 border border-white/15 px-4 py-2 text-sm text-white/80 hover:text-white"
                         ><User size={18} />
+                        <span>Olá, {username}</span>
                         </Link>
                         <button 
                             onClick={handleLogout}
