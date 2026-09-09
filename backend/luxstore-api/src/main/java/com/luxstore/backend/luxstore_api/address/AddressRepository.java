@@ -10,4 +10,5 @@ import com.luxstore.backend.luxstore_api.user.User;
 public interface AddressRepository extends JpaRepository<Address, Long> {
     List<Address> findByUser(User user);
     Optional<Address> findByIdAndUser(Long id, User user);
+    void deleteById(Long id);
 }

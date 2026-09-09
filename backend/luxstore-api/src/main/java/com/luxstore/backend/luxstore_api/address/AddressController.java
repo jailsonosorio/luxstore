@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.luxstore.backend.luxstore_api.user.User;
 import com.luxstore.backend.luxstore_api.user.UserRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/account/address")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -27,6 +29,7 @@ public class AddressController {
 
     // LISTAR MORADAS DO UTILIZADOR
     @GetMapping
+    @Operation(summary = "Get all addresses for the authenticated user")
     public ResponseEntity<List<Address>> getAddresses(
             Authentication authentication) {
 
@@ -38,6 +41,7 @@ public class AddressController {
 
     // CRIAR NOVA MORADA
     @PostMapping
+    @Operation(summary = "Create a new address for the authenticated user")
     public ResponseEntity<Address> createAddress(
             @RequestBody Address address,
             Authentication authentication) {
@@ -54,6 +58,7 @@ public class AddressController {
 
     // ATUALIZAR MORADA
     @PutMapping("/{id}")
+    @Operation(summary = "Update an existing address for the authenticated user")
     public ResponseEntity<Address> updateAddress(
             @PathVariable Long id,
             @RequestBody Address addressData,
@@ -79,8 +84,37 @@ public class AddressController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}/default")
+    @Operation(summary = "Set an address as the default for the authenticated user")
+    public ResponseEntity<Address> setDefaultAddress(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        User user = getAuthenticatedUser(authentication);
+
+        return addressRepository.findByIdAndUser(id, user)
+                .map(addressToMakeDefault -> {
+
+                    // Retira o estado principal de todas as moradas
+                    List<Address> addresses = addressRepository.findByUser(user);
+
+                    for (Address address : addresses) {
+                        address.setDefault(false);
+                    }
+
+                    // Define esta como a única principal
+                    addressToMakeDefault.setDefault(true);
+
+                    addressRepository.saveAll(addresses);
+
+                    return ResponseEntity.ok(addressToMakeDefault);
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     // ELIMINAR MORADA
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete an existing address for the authenticated user")
     public ResponseEntity<Void> deleteAddress(
             @PathVariable Long id,
             Authentication authentication) {

@@ -82,11 +82,11 @@ export default function AddressPage() {
                 {/* CABEÇALHO */}
                 <div className="mb-8">
                     <Link
-                        href="/account"
+                        href="/account/addresses"
                         className="mb-5 inline-flex items-center gap-2 text-sm text-white/60 transition hover:text-white"
                     >
                         <ArrowLeft size={16} />
-                        Voltar para área do cliente
+                        Voltar para lista de moradas
                     </Link>
 
                     <div className="flex items-center gap-4">
